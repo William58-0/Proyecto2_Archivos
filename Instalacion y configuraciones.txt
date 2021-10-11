@@ -1,0 +1,34 @@
+-- CONTENEDOR DOCKER
+
+sudo docker pull dockerhelp/docker-oracle-ee-18c							# descarga la imagen de oracle para docker (aprox 5gb)
+sudo docker run -p 1521:1521 -it dockerhelp/docker-oracle-ee-18c bash		# ejecuta el contenedor
+
+-- MONTAR BASE DE DATOS
+
+sh post_install.sh				# esperar a que diga algo de "database connected"
+sqlplus
+user: sys as sysdba
+pass: oracle
+alter session set "_ORACLE_SCRIPT"=true;
+create user TEST identified by 1234;
+grant dba to TEST;
+GRANT execute ON DBMS_LOCK TO TEST;
+exit;
+sqlplus '/ as sysdba'			# este es opcional
+CONNECT TEST;					# este es opcional
+
+								# se puede salir del contenedor con ctrl p + q
+								
+-- PARA CONECTAR A LA BASE DE DATOS DESDE SQL DEVELOPER O DBEAVER
+puerto: 	1521
+host:		localhost
+user:		TEST
+password: 	1234
+
+-- PARA CONECTAR DESDE NODE JS HAY QUE DESCARGAR(.ZIP) Y CONFIGURAR BASIC INSTANT CLIENT PARA BASES REMOTAS
+
+								
+								
+	
+
+
