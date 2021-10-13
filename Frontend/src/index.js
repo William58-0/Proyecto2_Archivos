@@ -1,32 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { useHistory, createBrowserHistory } from 'history';
-
-import { Router, Route, Switch, Redirect } from "react-router-dom";
-
-import AdminLayout from "./layouts/Admin/Admin.js";
-
-//import "./assets/scss/black-dashboard-react.scss";
-//import "assets/demo/demo.css";
-//import "assets/css/nucleo-icons.css";
-import Login from "./views/Login";
-import RegistrarUsuarios from "./views/RegistrarUsuarios";
-
-const hist = createBrowserHistory();
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import App from './containers/App';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 
 ReactDOM.render(
-  <Router history={hist}>
-    <Switch>
-      <Route exact path="/login">
-        <Login />
-      </Route>
-      <Route exact path="/RegistrarUsuarios">
-        <RegistrarUsuarios />
-      </Route>
+  <App />,
+  document.getElementById('root')
 
-      <Route path="/admin" render={(props) => <AdminLayout {...props} />} />
-      <Redirect from="/" to="/login" />
-    </Switch>
-  </Router>,
-  document.getElementById("root")
 );

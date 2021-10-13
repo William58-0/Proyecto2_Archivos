@@ -1,0 +1,22 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  color: white;
+}
+
+.tblsimbolos{
+  color: white;
+  background-color: rgb(61, 136, 61);
+  text-align: center;
+}
+
+.tblerrores{
+  color: white;
+  background-color: rgb(165, 43, 39);
+  text-align: center;
+}
+
+.login{
+  text-align: center;
+}
