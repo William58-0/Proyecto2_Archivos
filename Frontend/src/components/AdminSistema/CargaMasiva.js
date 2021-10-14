@@ -1,5 +1,6 @@
 import { React, useState } from 'react';
 import NavBarAdminSistema from './NavBarAdminSistema';
+import { cargamasiva } from '../../utils/api';
 
 function CargaMasiva() {
   var texto=""
@@ -12,9 +13,10 @@ function CargaMasiva() {
     const fileReader = new FileReader();
     fileReader.readAsText(file);
     fileReader.onload = () => {
-      console.log(fileReader.result);
+      //console.log(fileReader.result);
       setMyValue(fileReader.result);
       texto=fileReader.result
+      console.log(texto)
     }
     fileReader.onerror = () => {
       console.log(fileReader.error);
@@ -27,8 +29,17 @@ function CargaMasiva() {
   }
 
   const GuardarEnBase = (e) => {
-    setMyValue("");
-    texto=""
+    console.log(myValue)
+    cargamasiva(myValue)
+                .then(res => {
+                    console.log(res)
+                    //this.setState({ salida: res.data.salida });
+                    //Salida=res.data.salida;
+                    //console.log(res.data.salida);
+                })
+                .catch((err) => console.log(err));
+        //setMyValue("");
+        //texto=""
 }
 
   return (

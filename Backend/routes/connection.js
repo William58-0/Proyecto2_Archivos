@@ -20,10 +20,10 @@ async function connect(consulta) {
       }
     );
 
-    console.log(result.rows);
-    return {"status":200,"data":result.rows};
+    //console.log(result.rows);
+    return { "status": 200, "data": result.rows };
   } catch (error) {
-      return {"status":400,"message":error.message}
+    return { "status": 400, "message": error.message }
   }
 }
 

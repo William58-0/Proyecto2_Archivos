@@ -1,23 +1,23 @@
 import axios from 'axios';
 
-export function compilar(text) {
+export function cargamasiva(text) {
   const texto = { texto: text };
-  return axios.post('http://127.0.0.1:5000/analizar', texto)
+  return axios.post('http://localhost:9000/AdminSistema/cargamasiva', texto)
 }
 
 export function getC3D(text) {
   const texto = { texto: text };
-  return axios.post('http://127.0.0.1:5000/getC3D', texto)
+  return axios.post('http://localhost:9000/getC3D', texto)
 }
 
 export function getSymbols() {
-  return axios.get('http://127.0.0.1:5000/tblsym')
+  return axios.get('http://localhost:9000/tblsym')
 }
 
 export function getErrores() {
-  return axios.get('http://127.0.0.1:5000/tblerr')
+  return axios.get('http://localhost:9000/tblerr')
 }
 
 export function getCST() {
-  return axios.get('http://127.0.0.1:5000/cst')
+  return axios.get('http://localhost:9000/cst')
 }

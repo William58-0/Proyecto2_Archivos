@@ -9,12 +9,14 @@ const cors = require("cors");
 
 var usuarios = require("./routes/usuarios");
 var peliculas = require("./routes/peliculas");
+var AdminSistema = require("./routes/AdminSistema");
 
 
 
 app.use(cors(corsOptions));
 app.use("/usuarios", usuarios);
 app.use("/peliculas", peliculas);
+app.use("/AdminSistema", AdminSistema);
 
 
 app.listen(9000, () => {
