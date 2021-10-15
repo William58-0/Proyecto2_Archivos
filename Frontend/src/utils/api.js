@@ -5,6 +5,11 @@ export function cargamasiva(text) {
   return axios.post('http://localhost:9000/AdminSistema/cargamasiva', texto)
 }
 
+export function registrarusuario(name, password) {
+  const usuario = {nombre:name, contrasenia: password }; 
+  return axios.post('http://localhost:9000/AdminSistema/registrarusuario', usuario)
+}
+
 export function getC3D(text) {
   const texto = { texto: text };
   return axios.post('http://localhost:9000/getC3D', texto)

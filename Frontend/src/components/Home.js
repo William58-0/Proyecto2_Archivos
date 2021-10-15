@@ -28,7 +28,7 @@ class Home extends React.Component {
         <Container>
           <h1>Inicio</h1>
           <Form>
-            <Link to="/adminsistema">
+            <Link to="/adminsistema/carga">
               <button style={{ marginBottom: "4%" }} class="btn btn-success">
                 Administrador del Sistema
               </button>

@@ -16,7 +16,7 @@ function CargaMasiva() {
       //console.log(fileReader.result);
       setMyValue(fileReader.result);
       texto=fileReader.result
-      console.log(texto)
+      //console.log(texto)
     }
     fileReader.onerror = () => {
       console.log(fileReader.error);

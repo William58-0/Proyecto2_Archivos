@@ -68,15 +68,13 @@ router.post("/crear_usuario", async function (req, res, next) {
   }
 });
 
-
-
-
 router.post("/cargamasiva", async function (req, res, next) {
   const convert = require('xml-js');
   const fs = require('fs');
 
   // read file 
-  const xmlFile = fs.readFileSync('entrada.xml', 'utf8');
+  //const xmlFile = fs.readFileSync('entrada.xml', 'utf8');
+  const xmlFile = req.body.texto
 
   const xml2js = require('xml2js');
 

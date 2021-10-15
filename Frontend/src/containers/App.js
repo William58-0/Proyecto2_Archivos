@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import Home from '../components/Home';
 
 // Administrador del Sistema
-import AdminSistemaLogin from '../components/AdminSistema/AdminSistemaLogin';
 import AdminUsersHome from '../components/AdminSistema/AdminUsersHome';
 import CargaMasiva from '../components/AdminSistema/CargaMasiva';
 import AdminUsers from '../components/AdminSistema/AdminUsuarios/AdminUsers';
-import createuser from '../components/AdminSistema/AdminUsuarios/createuser';
+import CreateUser from '../components/AdminSistema/AdminUsuarios/CreateUser';
 import edituser from '../components/AdminSistema/AdminUsuarios/edituser';
 
 // Coordinador de Departamento
@@ -61,11 +60,6 @@ class App extends Component {
               />
 
               <Route
-                path="/adminsistema"
-                exact
-                component={AdminSistemaLogin}
-              />
-              <Route
                 path="/adminsistema/adminusershome"
                 exact
                 component={AdminUsersHome}
@@ -83,7 +77,7 @@ class App extends Component {
               <Route
                 path="/adminsistema/adminusershome/createuser"
                 exact
-                component={createuser}
+                component={CreateUser}
               />
               <Route
                 path="/adminsistema/adminusershome/edituser"
