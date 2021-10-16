@@ -6,7 +6,7 @@ import AdminUsersHome from '../components/AdminSistema/AdminUsersHome';
 import CargaMasiva from '../components/AdminSistema/CargaMasiva';
 import AdminUsers from '../components/AdminSistema/AdminUsuarios/AdminUsers';
 import CreateUser from '../components/AdminSistema/AdminUsuarios/CreateUser';
-import edituser from '../components/AdminSistema/AdminUsuarios/edituser';
+import EditUser from '../components/AdminSistema/AdminUsuarios/EditUser';
 
 // Coordinador de Departamento
 import CoordDepLogin from '../components/CoordDep/CoordDepLogin';
@@ -80,9 +80,9 @@ class App extends Component {
                 component={CreateUser}
               />
               <Route
-                path="/adminsistema/adminusershome/edituser"
+                path="/adminsistema/EditUser/:nombre"
                 exact
-                component={edituser}
+                component={EditUser}
               />
 
               <Route

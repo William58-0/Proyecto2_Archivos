@@ -1,4 +1,5 @@
 var oracledb = require("oracledb");
+oracledb.autoCommit = true;
 
 var connAttrs = {
   user: process.env.DB_USER,

@@ -1,12 +1,36 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router';
+import PropTypes from 'prop-types';
+import { Button } from "react-bootstrap";
 
 var arreglo = []
 
+
+
 class CoordDepLogin extends React.Component {
+
+  static contextTypes = {
+    router: PropTypes.shape({
+      history: PropTypes.shape({
+        push: PropTypes.func.isRequired,
+        replace: PropTypes.func.isRequired
+      }).isRequired,
+      staticContext: PropTypes.object
+    }).isRequired
+  };
+  
+  handleOnClick = () => {
+    this.context.router.push('/');
+  }
+
+  
+
 
   render() {
     //this.AErrores()
+    
+
     return (
       <div>
         <br /><br />
@@ -27,9 +51,9 @@ class CoordDepLogin extends React.Component {
             Contraseña: <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="password" name="password" />
           </label><br />
           <br />
-          <Link to="/coorddep/aprobados">
-          <button class="btn btn-info">Iniciar Sesión</button><br /><br />
-          </Link>
+          
+          <Button class="btn btn-info" onClick={this.setRedirect()}>Iniciar Sesión</Button><br /><br />
+          
         </form>
         <br /><br />
         <br /><br />
@@ -38,6 +62,29 @@ class CoordDepLogin extends React.Component {
 
       </div>
     );
+   
+  }
+
+  state = {
+    redirect: false
+  }
+  setRedirect = () => {
+    this.setState({
+      redirect: true
+    })
+  }
+  renderRedirect = () => {
+    if (this.state.redirect) {
+      return <Redirect to='/' />
+    }
+  }
+  render () {
+    return (
+       <div>
+        {this.renderRedirect()}
+        <button onClick={this.setRedirect}>Redirect</button>
+       </div>
+    )
   }
 
 

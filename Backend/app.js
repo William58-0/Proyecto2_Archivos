@@ -6,7 +6,7 @@ var corsOptions = { origin: true, optionsSuccessStatus: 200 };
 
 const cors = require("cors");
 
-
+var Generales = require("./routes/Generales");
 var usuarios = require("./routes/usuarios");
 var peliculas = require("./routes/peliculas");
 var AdminSistema = require("./routes/AdminSistema");
@@ -14,6 +14,7 @@ var AdminSistema = require("./routes/AdminSistema");
 
 
 app.use(cors(corsOptions));
+app.use("", Generales);
 app.use("/usuarios", usuarios);
 app.use("/peliculas", peliculas);
 app.use("/AdminSistema", AdminSistema);

@@ -13,10 +13,8 @@ function CargaMasiva() {
     const fileReader = new FileReader();
     fileReader.readAsText(file);
     fileReader.onload = () => {
-      //console.log(fileReader.result);
       setMyValue(fileReader.result);
       texto=fileReader.result
-      //console.log(texto)
     }
     fileReader.onerror = () => {
       console.log(fileReader.error);
@@ -29,17 +27,11 @@ function CargaMasiva() {
   }
 
   const GuardarEnBase = (e) => {
-    console.log(myValue)
     cargamasiva(myValue)
                 .then(res => {
                     console.log(res)
-                    //this.setState({ salida: res.data.salida });
-                    //Salida=res.data.salida;
-                    //console.log(res.data.salida);
                 })
                 .catch((err) => console.log(err));
-        //setMyValue("");
-        //texto=""
 }
 
   return (
