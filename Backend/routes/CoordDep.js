@@ -10,6 +10,20 @@ router.use(cors({ origin: true, optionsSuccessStatus: 200 }));
 router.use(bodyParser.json({ limit: "50mb", extended: true }));
 router.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
+router.get("/Login", async function (req, res, next) {
+  let responseDep = await service.connect(
+    `SELECT Nombre, Contrasenia FROM COORDINADOR_REVISOR`
+  );
+  console.log(req)
+  if (responseDep.status == 400) {
+    res.status(400).json({ message: responseDep.message });
+  } else {
+    res
+      .status(200)
+      .json(responseDep.data);
+  }
+});
+
 
 router.post("/cargamasiva", async function (req, res, next) {
   const xmlFile = req.body.texto
@@ -73,9 +87,9 @@ router.post("/registrarusuario", async function (req, res, next) {
   let now= new Date();
   const fechainicio=now.getDay()+"/"+now.getMonth()+"/"+now.getFullYear()
 
-  // INSERT INTO COORDINADOR_REVISOR VALUES('coord1','1234', 'hoy', 'maniana', 'Coordinador', 'Activo', 0, 'uno' );
+  // INSERT INTO COORDINADOR_REVISOR VALUES('coord1','1234', 'hoy', 'maniana', 'Coordinador', 'Activo', 'uno' );
   let response = await service.connect(
-    `BEGIN INSERT INTO COORDINADOR_REVISOR VALUES('${nombre}','${contrasenia}','${fechainicio}','-','${tipo}','Activo',0,'${departamento}'); COMMIT; END;`
+    `BEGIN INSERT INTO COORDINADOR_REVISOR VALUES('${nombre}','${contrasenia}','${fechainicio}','-','${tipo}','Activo','${departamento}'); COMMIT; END;`
   );
   
   if (response.status == 400) {

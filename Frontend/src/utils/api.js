@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useParams } from 'react-router';
 
 export function cargamasiva(text) {
   const texto = { texto: text };
@@ -24,12 +25,41 @@ export function getDepartamentos() {
   return axios.get('http://localhost:9000/getDepartamentos')
 }
 
+export function getPuestos() {
+  return axios.get('http://localhost:9000/getPuestos')
+}
+
+export function Login(nombre, contrasenia) {
+  const usuario={ nombre, contrasenia }
+  return axios.post('http://localhost:9000/Login', usuario)
+}
+
+export function LoginAplicante(dpi, contrasenia) {
+  const aplicante={ dpi, contrasenia }
+  return axios.post('http://localhost:9000/Aplicante/LoginAplicante', aplicante)
+}
+
 export function getUsuarios() {
   return axios.get('http://localhost:9000/getUsuarios')
 }
 
 export function getUsuario(nombre) {
   return axios.post('http://localhost:9000/getUsuario', nombre)
+}
+
+export function getRequisitos(departamento, puesto) {
+  const info = { departamento, puesto }
+  return axios.post('http://localhost:9000/getRequisitos', info)
+}
+
+export function getRevisor(departamento) {
+  const dept = { departamento }
+  return axios.post('http://localhost:9000/Aplicante/getRevisor', dept)
+}
+
+export function insertAplicante(dpi, nombres, apellidos, correo, direccion, telefono, depart, puesto, revisor) {
+  const aspirante = { dpi, nombres, apellidos, correo, direccion, telefono, depart, puesto, revisor }
+  return axios.post('http://localhost:9000/Aplicante/insertAplicante', aspirante)
 }
 
 export function getC3D(text) {

@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { Button, FormGroup, FormControl, FormLabel, Dropdown } from "react-bootstrap";
 import { Link, useParams } from 'react-router-dom';
 import { editarusuario } from '../../../utils/api';
@@ -6,8 +6,7 @@ import { getDepartamentos } from '../../../utils/api';
 import { getUsuario } from '../../../utils/api';
 import AdminUsersHome from '../AdminUsersHome';
 import { Container, Row, Col } from 'reactstrap';
-import toastr from "toastr";
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 
 var departamentos = []
 var original = ""

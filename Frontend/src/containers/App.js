@@ -144,7 +144,7 @@ class App extends Component {
                 component={GuestHome}
               />
               <Route
-                path="/guest/form"
+                path="/guest/form/:puesto/:departamento"
                 exact
                 component={GuestForm}
               />

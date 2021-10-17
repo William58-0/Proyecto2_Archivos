@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
-import { Redirect } from 'react-router';
 import { Link, useParams } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
 import { MDBTable, MDBTableBody, MDBTableHead } from 'mdbreact';
 
-//import { getRequisitos } from '../../utils/api';
-import { getRevisor } from '../../utils/api';
+import { getRequisitos } from '../../utils/api';
 import { insertAplicante } from '../../utils/api';
 
 function GuestForm() {
@@ -14,17 +12,39 @@ function GuestForm() {
   const [requisitos, setReq] = useState([]);
   const [departamento, setDep] = useState(useParams().departamento)
   const [puesto, setPuesto] = useState(useParams().puesto)
-  const [redirect, setRedirect] = useState(false);
-  const [revisor, setRev] = useState(false);
 
   useEffect(() => {
     getData()
   }, [])
 
   const getData = async () => {
-    const response = await getRevisor(departamento)
+    const response = await getRequisitos(departamento, puesto)
     console.log(response)
-    setRev(response.data[0].NOMBRE)
+    // se unifican los formatos
+    var escritos = []
+    var nuevos = []
+    for (let i = 0; i < response.data.length; i++) {
+      if (!escritos.includes(response.data[i].NOMBRE)) {
+        var actual = response.data[i].NOMBRE
+        var formatos = response.data[i].FORMATO
+        for (let j = 0; j < response.data.length; j++) {
+          if (response.data[j].NOMBRE == actual && !escritos.includes(response.data[j].NOMBRE) && i!=j) {
+            formatos += ", " + response.data[j].FORMATO
+          }
+        }
+        var nuevo = {
+          FORMATO: formatos,
+          NOMBRE: actual,
+          TAMANIO: response.data[i].TAMANIO,
+          OBLIGATORIO: response.data[i].OBLIGATORIO
+        }
+        nuevos.push(nuevo)
+        escritos.push(response.data[i].NOMBRE)
+      }
+      
+    }
+
+    setReq(nuevos)
   }
 
   const columns = [
@@ -50,7 +70,7 @@ function GuestForm() {
 
   function probar() {
     console.log(departamento)
-    console.log(revisor)
+    console.log(puesto)
   }
 
   const [userInfo, setuserInfo] = useState({
@@ -96,7 +116,7 @@ function GuestForm() {
     console.log(correo)
     console.log(direccion)
     console.log(telefono)
-    insertAplicante(dpi, nombres, apellidos, correo, direccion, telefono, departamento, puesto, revisor)
+    insertAplicante(dpi, nombres, apellidos, correo, direccion, telefono, departamento, puesto)
             .then(res => {
                 console.log(res)
                 alert("ANOTE SU CONTRASEÑA: "+res.data)
@@ -185,12 +205,31 @@ function GuestForm() {
           <Col>
             <div >
               <div >
-                <p style={{color:"white"}}>Su revisor será: {revisor}</p>
-                <h3 style={{color:"white"}}>Subir CV en PDF</h3>
-                <p style={{color:"white"}}>Usar el formato "DPI_CV"</p>
+                <div className="row">
+                  <div className="col-md-12">
+                    <form style={{
+                      margin: "auto",
+                      backgroundColor: "#4884af",
+                      marginTop: "2%",
+                      width: "auto",
+                      padding: "2%",
+                      borderRadius: "2%",
+                      color: "white"
+                    }}>
+                      <h1 style={{ textAlign: "center" }}>Requisitos</h1>
+                      <MDBTable scrollY >
+                        <MDBTableHead columns={columns} />
+                        <MDBTableBody rows={requisitos} />
+                      </MDBTable>
+                    </form>
+                  </div>
+                </div>
+
+                <p style={{ color: "white" }}>Utilizar formato: "DPI_REQUISITO", en mayusculas</p>
                 <div className="formdesign">
                   {isSucces !== null ? <h4> {isSucces} </h4> : null}
                   <div className="form-row" >
+                    <label className="text-white">Seleccionar Documento: </label>
                     <input type="file" className="form-control" name="upload_file" onChange={handleInputChange} />
                     <br />
                     <div className="form-row" style={{ textAlign: "right" }} >

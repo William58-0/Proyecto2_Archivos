@@ -79,12 +79,11 @@ const Table = () => {
     }
 
     const filtrar = () => {
-        original = usuarios
-        console.log(filName)
-        console.log(filEstado)
-        console.log(filInicio)
-        console.log(filFin)
-        console.log(filTipo)
+        if(original.length==0){
+            original=usuarios
+          }else{
+            setUsuarios(original)
+          }
         var del = usuarios
         if (filName != "") {
             del = usuarios.filter(usuario => usuario.NOMBRE == filName)
@@ -106,7 +105,7 @@ const Table = () => {
     }
 
     function quitarFiltros() {
-
+        window.location.reload();
     }
 
     return (
@@ -149,9 +148,9 @@ const Table = () => {
                 <Button variant="success" style={{ marginLeft: "2%" }} onClick={filtrar}>
                     <i>Filtrar</i>
                 </Button>
-                <button class="btn btn-info" style={{ marginLeft: "2%" }}>
+                <Button variant="info" style={{ marginLeft: "2%" }} onClick={quitarFiltros}>
                     <i>Quitar Filtros</i>
-                </button>
+                </Button>
             </div>
 
             <div className="row">
