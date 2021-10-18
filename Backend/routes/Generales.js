@@ -85,7 +85,7 @@ router.post("/getUsuario", async function (req, res, next) {
 router.post("/getRequisitos", async function (req, res, next) {
   const { departamento, puesto } = req.body;
   let responseReq = await service.connect(
-    `SELECT DISTINCT NOMBRE, FORMATO, TAMANIO, OBLIGATORIO FROM REQUISITO WHERE DEPARTAMENTO ='${departamento}' AND PUESTO='${puesto}'`
+    `SELECT DISTINCT NOMBRE, FORMATO, TAMANIO, OBLIGATORIO FROM REQUISITO WHERE Departamento ='${departamento}' AND Puesto='${puesto}'`
   );
   if (responseReq.status == 400) {
     res.status(400).json({ message: responseReq.message });
@@ -96,12 +96,64 @@ router.post("/getRequisitos", async function (req, res, next) {
   }
 });
 
+
+router.post("/getMensajes", async function (req, res, next) {
+  const { perfil } = req.body;
+  let responseReq = await service.connect(
+    `SELECT * FROM MENSAJE WHERE Emisor ='${perfil}' OR Receptor='${perfil}' ORDER BY Orden ASC`
+  );
+  console.log(responseReq)
+
+  if (responseReq.status == 400) {
+    res.status(400).json({ message: responseReq.message });
+  } else {
+    var escritos=[]
+    var usuarios = []
+    for (let i = 0; i < responseReq.data.length; i++) {
+      if (!escritos.includes(responseReq.data[i].EMISOR)) {
+        usuarios.push({ nombre: responseReq.data[i].EMISOR })
+        escritos.push(responseReq.data[i].EMISOR)
+      } if (!escritos.includes(responseReq.data[i].RECEPTOR)) {
+        usuarios.push({ nombre: responseReq.data[i].RECEPTOR })
+        escritos.push(responseReq.data[i].RECEPTOR)
+      }
+    }
+    res
+      .status(200)
+      .json({ mensajes: responseReq.data, users: usuarios });
+  }
+
+});
+
+// INSERT INTO MENSAJE VALUES ('william580',12, '2797652900101', 'stas');
+
+router.post("/sendMessage", async function (req, res, next) {
+  const { emisor, texto, receptor } = req.body;
+  var actual = Date.now()
+  console.log(actual)
+
+  let responseReq = await service.connect(
+    `INSERT INTO MENSAJE VALUES ('${emisor}',${actual}, '${receptor}', '${texto}')`
+  );
+  console.log(responseReq)
+
+  if (responseReq.status == 400) {
+    res.status(400).json({ message: responseReq.message });
+  } else {
+    res
+      .status(200)
+      .json(responseReq.data);
+  }
+});
+
+
+
 const storage = multer.diskStorage({
   destination: path.join(__dirname, './public_html/', 'uploads'),
   filename: function (req, file, cb) {
-      console.log(file)
-      // null as first argument means no error
-      cb(null,file.originalname)
+    console.log(file)
+    // null as first argument means no error
+    cb(null, file.originalname)
   }
 })
 
@@ -111,27 +163,27 @@ const uploadImage = multer({
 
 router.post('/imageupload', async (req, res) => {
   try {
-     let upload = multer({ storage: storage}).single('avatar');
-     
-     upload(req, res, function(err) {
-         if (!req.file) {
-             return res.send('Seleccionar archivo');
-         }
-         else if (err instanceof multer.MulterError) {
-             return res.send(err);
-         }
-         else if (err) {
-             return res.send(err);
-         } else {
-            return res.send('sepudo');
-         }
-         
-         const classifiedsadd = {
-             image: req.file.filename
-         };
-         
-     });  
-} catch (err) {console.log(err)}
+    let upload = multer({ storage: storage }).single('avatar');
+
+    upload(req, res, function (err) {
+      if (!req.file) {
+        return res.send('Seleccionar archivo');
+      }
+      else if (err instanceof multer.MulterError) {
+        return res.send(err);
+      }
+      else if (err) {
+        return res.send(err);
+      } else {
+        return res.send('sepudo');
+      }
+
+      const classifiedsadd = {
+        image: req.file.filename
+      };
+
+    });
+  } catch (err) { console.log(err) }
 });
 
 

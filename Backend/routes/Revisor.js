@@ -24,73 +24,24 @@ router.get("/Login", async function (req, res, next) {
   }
 });
 
-router.post("/registrarusuario", async function (req, res, next) {  
-  const { nombre, contrasenia, tipo, departamento } = req.body;
-  let now= new Date();
-  const fechainicio=now.getDay()+"/"+now.getMonth()+"/"+now.getFullYear()
-
-  // INSERT INTO COORDINADOR_REVISOR VALUES('coord1','1234', 'hoy', 'maniana', 'Coordinador', 'Activo', 'uno' );
-  let response = await service.connect(
-    `BEGIN INSERT INTO COORDINADOR_REVISOR VALUES('${nombre}','${contrasenia}','${fechainicio}','-','${tipo}','Activo','${departamento}'); COMMIT; END;`
-  );
-  
-  if (response.status == 400) {
-    res.status(400).json({ message: response.message });
-  } else {
-      res
-        .status(200)
-        .json({ message: "Usuario creado correctamente"});
-  }
-});
-
-router.post("/editarusuario", async function (req, res, next) {  
-  const { original, nombre, contrasenia, tipo, departamento } = req.body;
-
-  // UPDATE COORDINADOR_REVISOR SET Nombre = 'william', Contrasenia='nueva', Tipo='Rev', Departamento='uno' WHERE Nombre = 'Anderson';
-  let response = await service.connect(
-    `UPDATE COORDINADOR_REVISOR SET Nombre='${nombre}', Contrasenia='${contrasenia}', Tipo='${tipo}', Departamento='${departamento}' WHERE Nombre='${original}'`
-  );
-
-  console.log(response)
-  
-  if (response.status == 400) {
-    res.status(400).json({ message: response.message });
-  } else {
-      res
-        .status(200)
-        .json({ message: "Usuario actualizado correctamente"});
-  }
-  
-});
-
-router.post("/eliminarusuario", async function (req, res, next) {  
-  const { nombre } = req.body;
-
-  // UPDATE COORDINADOR_REVISOR SET Estado = 'Inactivo' WHERE Nombre = 'Anderson';
-  let response = await service.connect(
-    `UPDATE COORDINADOR_REVISOR SET Estado='Inactivo' WHERE Nombre='${nombre}'`
-  );
-
-  console.log(response)
-  
-  if (response.status == 400) {
-    res.status(400).json({ message: response.message });
-  } else {
-      res
-        .status(200)
-        .json({ message: "Usuario eliminado correctamente"});
-  }
-  
-});
-
 router.post("/aceptarAplicante", async function (req, res, next) {  
   const { dpi } = req.body;
+  // Se cambia a aceptado el estado del aplicante y se le asigna su contraseña
+  // Se le crea una contraseña, será Date.now
+  var actual = Date.now()
   // UPDATE APLICANTE_EMPLEADO SET Estado = 'Inactivo' WHERE Nombre = 'Anderson';
   let respAcetpApl = await service.connect(
-    `UPDATE APLICANTE_EMPLEADO SET Estado='aceptado' WHERE DPI=${dpi}`
+    `UPDATE APLICANTE_EMPLEADO SET Estado='aceptado', Contrasenia='${actual}' WHERE DPI=${dpi}`
   );
-  console.log(respAcetpApl)
-  if (respAcetpApl.status == 400) {
+  //console.log(respAcetpApl)
+  
+  // Se le envia un mensaje al aplicante con las creedenciales
+  console.log(actual)
+  let responseReq = await service.connect(
+    `INSERT INTO MENSAJE VALUES ('Sistema',${actual}, '${dpi}', 'Fue aceptado por su revisor, su contraseña es: ${actual}')`
+  );
+
+  if (respAcetpApl.status == 400 && responseReq.status == 400) {
     res.status(400).json({ message: respAcetpApl.message });
   } else {
       res

@@ -36,8 +36,12 @@ function CreateUser() {
   registrarusuario(nombre, password, tipo, departamento)
     .then(res => {
       console.log(res)
+      alert("Usuario creado correctamente")
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err)
+      alert("Ocurrio un problema")
+    });
 
   }
 

@@ -7,16 +7,20 @@ import { LoginAplicante } from '../../utils/api';
 
 var arreglo = []
 
-
-
-const AplicanteLogin = () => {
+function AplicanteLogin() {
   const [dpi, setDPI] = useState("")
+  const [departamento, setDepartamento] = useState("");
   const [password, setPassword] = useState("");
+  const [primer, setPrimer] = useState(1);
   const [redirect, setRedirect] = useState(false);
 
   const renderRedirect = () => {
     if (redirect) {
-      return <Redirect to='/aplicante/correccion' />
+      if (primer==1) {
+        return <Redirect to={'/aplicante/correccion' + dpi} />
+      }else{
+        
+      }
     }
   }
 
@@ -30,12 +34,13 @@ const AplicanteLogin = () => {
           setRedirect(false)
           alert("Datos incorrectos")
         } else {
-          if (res.data[0].ESTADO == "Aceptado") {
+          if (res.data[0].TIPO == "Revisor" && res.data[0].ESTADO == "Activo") {
+            setDepartamento(res.data[0].DEPARTAMENTO)
             setRedirect(true)
             alert("Bienvenido")
-          }else{
+          } else {
             setRedirect(false)
-            alert("No es un aplicante")
+            alert("No es un revisor activo")
           }
         }
       })
@@ -51,13 +56,12 @@ const AplicanteLogin = () => {
           Regresar
         </button>
       </Link>
-
       <br /><br />
       <br /><br />
       <form style={{ textAlign: "center", alignItems: "center", color: "white" }}>
-        <h1 style={{ color: "white" }}>Iniciar Sesión como Aplicante</h1>
+        <h1 style={{ color: "white" }}>Iniciar Sesión como Revisor de Expedientes</h1>
         <label>
-          DPI: <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+          Nombre de Usuario: <input style={{ marginLeft: "2%", marginBottom: "2%" }}
             type="text" value={dpi} onChange={(e) => setDPI(e.target.value)} />
         </label><br />
         <label>
@@ -67,16 +71,12 @@ const AplicanteLogin = () => {
         <br />
         {renderRedirect()}
         <Button variant="info" onClick={IniciarSesion}>Iniciar Sesión</Button><br /><br />
-
       </form>
       <br /><br />
       <br /><br />
       <br /><br />
-
-
     </div>
   );
-
 }
 
 export default AplicanteLogin;

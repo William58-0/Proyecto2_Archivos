@@ -10,11 +10,11 @@ var arreglo = [
     direccion: "avenida jfkljs",
     telefono: "7889-7879",
     puesto: "jefe",
-    fecha: "hoy"
+    estadoexp: "pendiente"
   }
 ]
 
-class RevisorAplicantes extends React.Component {
+class RevisorRevision extends React.Component {
   constructor(props) {
     super(props);
     //this.ASimbolos();
@@ -53,7 +53,7 @@ class RevisorAplicantes extends React.Component {
           Filtros:
           <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Nombre" name="user" />
           <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Puesto" name="user" />
-          <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Fecha de Postulacion" name="user" />
+          <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Estado de Expediente" name="user" />
           <button class="btn btn-success" style={{ marginLeft: "2%" }}>
             <i>Filtrar</i>
           </button>
@@ -82,10 +82,8 @@ class RevisorAplicantes extends React.Component {
                   <td>DIRECCION</td>
                   <td>TELEFONO</td>
                   <td>PUESTO</td>
-                  <td>FECHA POSTULACION</td>
-                  <td>CV</td>
-                  <td>ACEPTAR</td>
-                  <td>RECHAZAR</td>
+                  <td>ESTADO EXPEDIENTE</td>
+                  <td>EXPEDIENTE</td>
                   {arreglo.map(item => (
                     <tr key={item.id}>
                       <td>{item.dpi}</td>
@@ -94,21 +92,13 @@ class RevisorAplicantes extends React.Component {
                       <td>{item.direccion}</td>
                       <td>{item.telefono}</td>
                       <td>{item.puesto}</td>
-                      <td>{item.fecha}</td>
+                      <td>{item.estadoexp}</td>
                       <td>
+                      <Link to="/revisor/revision/verexp" style={{ margin: "auto" }}>
                         <button class="btn btn-info" style={{ marginLeft: "2%" }}>
-                          CV
+                          EXPEDIENTE
                         </button>
-                      </td>
-                      <td>
-                        <button class="btn btn-success" style={{ marginLeft: "2%" }}>
-                          ACEPTAR
-                        </button>
-                      </td>
-                      <td>
-                        <button class="btn btn-danger" style={{ marginLeft: "2%" }}>
-                          RECHAZAR
-                        </button>
+                        </Link>
                       </td>
                     </tr>
                   ))}
@@ -127,4 +117,4 @@ class RevisorAplicantes extends React.Component {
   }
 }
 
-export default RevisorAplicantes;
+export default RevisorRevision;

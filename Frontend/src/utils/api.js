@@ -28,6 +28,18 @@ export function getUsuario(nombre) {
   return axios.post('http://localhost:9000/getUsuario', nombre)
 }
 
+// Obtiene los mensajes para un perfil(puede ser dpi en caso de ser aplicante o un nombre en caso de coordinador/revisor)
+export function getMensajes(perfil) {
+  const user = { perfil } 
+  return axios.post('http://localhost:9000/getMensajes', user)
+}
+
+// Inserta un mensaje
+export function sendMessage(emisor, texto, receptor) {
+  const msj = { emisor, texto, receptor }
+  return axios.post('http://localhost:9000/sendMessage', msj)
+}
+
 // --------------------------------------------------------------------------------------- AdminUsers
 // Para cargar el xml
 export function cargamasiva(text) {
@@ -107,6 +119,13 @@ export function getRevisor(departamento) {
 export function insertAplicante(dpi, nombres, apellidos, correo, direccion, telefono, depart, puesto, revisor) {
   const aplicante = { dpi, nombres, apellidos, correo, direccion, telefono, depart, puesto, revisor }
   return axios.post('http://localhost:9000/Guest/insertAplicante', aplicante)
+}
+
+// ------------------------------------------------------------------------------------------ CorreosGuest
+// Para que un guest pueda entrar a sus correos
+export function LoginGuest(dpi, correo) {
+  const aplicante={ dpi, correo }
+  return axios.post('http://localhost:9000/CorreoGuest/LoginGuest', aplicante)
 }
 
 

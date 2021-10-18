@@ -7,14 +7,15 @@ import { Login } from '../../utils/api';
 
 var arreglo = []
 
-function CoordDepLogin ()  {
+function RevisorLogin ()  {
   const [name, setName] = useState("")
+  const [departamento, setDepartamento] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
 
   const renderRedirect = () => {
     if (redirect) {
-      return <Redirect to='/coorddep/aprobados' />
+      return <Redirect to={'/revisor/aplicantes/'+departamento} />
     }
   }
 
@@ -28,17 +29,17 @@ function CoordDepLogin ()  {
           setRedirect(false)
           alert("Datos incorrectos")
         } else {
-          if (res.data[0].TIPO == "Coordinador") {
+          if (res.data[0].TIPO == "Coordinador" && res.data[0].ESTADO == "Activo") {
+            setDepartamento(res.data[0].DEPARTAMENTO)
             setRedirect(true)
             alert("Bienvenido")
           }else{
             setRedirect(false)
-            alert("No es un coordinador")
+            alert("No es un coordinador activo")
           }
         }
       })
       .catch((err) => console.log(err));
-
   }
 
   //this.AErrores()
@@ -50,7 +51,6 @@ function CoordDepLogin ()  {
           Regresar
         </button>
       </Link>
-
       <br /><br />
       <br /><br />
       <form style={{ textAlign: "center", alignItems: "center", color: "white" }}>
@@ -66,16 +66,12 @@ function CoordDepLogin ()  {
         <br />
         {renderRedirect()}
         <Button variant="info" onClick={IniciarSesion}>Iniciar Sesión</Button><br /><br />
-
       </form>
       <br /><br />
       <br /><br />
       <br /><br />
-
-
     </div>
   );
-
 }
 
-export default CoordDepLogin;
+export default RevisorLogin;

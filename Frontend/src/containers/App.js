@@ -28,6 +28,10 @@ import AplicanteRevision from '../components/Aplicante/Revision';
 import GuestHome from '../components/Guest/GuestHome';
 import GuestForm from '../components/Guest/Formulario';
 
+// CorreosGuest
+import GuestLogin from '../components/CorreosGuest/GuestLogin';
+import GuestMessenger from '../components/CorreosGuest/GuestMessenger';
+
 
 import styled from 'styled-components';
 
@@ -112,12 +116,12 @@ class App extends Component {
                 component={RevisorAplicantes}
               />
               <Route
-                path="/revisor/revision/:departamento"
+                path="/revisor/revision"
                 exact
                 component={RevisorRevision}
               />
               <Route
-                path="/revisor/revision/verexp"
+                path="/revisor/revision/:dpi"
                 exact
                 component={RevisorVerExp}
               />
@@ -147,6 +151,17 @@ class App extends Component {
                 path="/guest/form/:puesto/:departamento"
                 exact
                 component={GuestForm}
+              />
+
+              <Route
+                path="/guestLogin"
+                exact
+                component={GuestLogin}
+              />
+              <Route
+                path="/guestLogin/messenger/:dpi"
+                exact
+                component={GuestMessenger}
               />
 
               <Route

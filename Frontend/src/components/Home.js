@@ -53,6 +53,11 @@ class Home extends React.Component {
               Guest
               </button>
             </Link><br />
+            <Link to="/guestLogin">
+              <button style={{ marginBottom: "4%" }} class="btn btn-info">
+              Correos Guest
+              </button>
+            </Link><br />
           </Form>
         </Container>
       </div>

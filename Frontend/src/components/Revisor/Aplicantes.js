@@ -152,7 +152,7 @@ function RevisorAplicantes() {
           <StyledLink to="/">201909103</StyledLink>
           <StyledLink to="/">Inicio</StyledLink>
           <StyledLink to={"/revisor/aplicantes/" + departamento}>Aceptar/Rechazar Aplicantes</StyledLink>
-          <StyledLink to={"/revisor/revision/" + departamento}>Revisión de Expediente</StyledLink>
+          <StyledLink to={"/revisor/revision"}>Revisión de Expediente</StyledLink>
         </Container>
       </div>
       <br />

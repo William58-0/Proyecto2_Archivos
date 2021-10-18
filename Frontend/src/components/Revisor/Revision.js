@@ -1,120 +1,218 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
+import { getAplicantesR } from '../../utils/api';
+import { eliminarusuario, aceptarAplicante } from '../../utils/api';
+import { Link, useParams } from 'react-router-dom';
+import { Button } from "react-bootstrap";
+import styled from 'styled-components';
 
-var arreglo = [
-  {
-    id: 1,
-    dpi:26327868,
-    nombre: "william alejandro borrayo alarcón",
-    correo: "activo@gmail.com",
-    direccion: "avenida jfkljs",
-    telefono: "7889-7879",
-    puesto: "jefe",
-    estadoexp: "pendiente"
-  }
-]
+var original = []
 
-class RevisorRevision extends React.Component {
-  constructor(props) {
-    super(props);
-    //this.ASimbolos();
-    this.state = {
-      arreglo: arreglo,
+const StyledLink = styled(Link)`
+  color: #fff;
+  font-weight: bold;
+  text-transform: capitalize;
+  text-decoration: none;
+  margin: 0 20px;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  height: 50px;
+  background-color: #333;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+`;
+
+function RevisorRevision() {
+  console.log(useParams().departamento)
+  const [aplicantes, setAplicantes] = useState([])
+  const [departamento, setDep] = useState(useParams().departamento)
+  const [filName, setFilName] = useState("");
+  const [filPuesto, setFilPuesto] = useState("");
+  const [filEstado, setFilEstado] = useState("");
+
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const getData = async () => {
+    const response = await getAplicantesR(departamento)
+    console.log(response)
+    for (let i = 0; i < response.data.length; i++) {
+      //var splitted = str.split(" ", 3); 
+      var nombre = response.data[i].NOMBRES.split(" ", 1)[0] + " " + response.data[i].APELLIDOS.split(" ", 1)[0]
+      response.data[i].NOMBRES = nombre
     }
+    setAplicantes(response.data)
   }
 
-  render() {
-    return (
+  const deleteData = (NOMBRE) => {
+    var nuevo = []
+    for (let i = 0; i < aplicantes.length; i++) {
+      if (aplicantes[i].NOMBRE == NOMBRE) {
+        var obj = aplicantes[i]
+        obj.FECHAFIN = "ahorita"
+        nuevo.push(obj)
+      } else {
+        nuevo.push(aplicantes[i])
+      }
+    }
+    setAplicantes(nuevo)
+    eliminarusuario(NOMBRE)
+      .then(res => {
+        console.log(res)
+      })
+      .catch((err) => console.log(err));
+    //const del = aplicantes.filter(usuario => NOMBRE !== usuario.NOMBRE)
+  }
+
+  const aceptar = (DPI) => {
+
+    aceptarAplicante(DPI)
+      .then(res => {
+        console.log(res)
+        alert("Aplicante Aceptado!")
+        const del = aplicantes.filter(aplicante => aplicante.DPI !== DPI)
+        setAplicantes(del)
+      })
+      .catch((err) => {
+        console.log(err)
+        alert("Ocurrio un error")
+      });
+    //const del = aplicantes.filter(usuario => NOMBRE !== usuario.NOMBRE)
+  }
+
+  const renderHeader = () => {
+    let headerElement = ['DPI', 'NOMBRE', 'CORREO', 'DIRECCION', 'TELEFONO', 'PUESTO', 'FECHA', 'CV', 'ACEPTAR', 'ELIMINAR']
+    return headerElement.map((key, index) => {
+      return <th key={index}>{key.toUpperCase()}</th>
+    })
+  }
+
+  const renderBody = () => {
+    return aplicantes.map(({ DPI, NOMBRES, CORREO, DIRECCION, TELEFONO, PUESTO, ESTADO }) => {
+      return (
+        <tr key={DPI}>
+          <td>{DPI}</td>
+          <td>{NOMBRES}</td>
+          <td>{CORREO}</td>
+          <td>{DIRECCION}</td>
+          <td>{TELEFONO}</td>
+          <td>{PUESTO}</td>
+          <td>{ESTADO}</td>
+          
+
+          <td className='opration'>
+            <Link to={'/adminsistema/EditUser/' + DPI}>
+              <button class="btn btn-info">
+                CV
+              </button>
+            </Link>
+          </td>
+          <td className='opration'>
+            <Button className='button' variant="success" onClick={() => aceptar(DPI)}>Aceptar</Button>
+          </td>
+          <td className='opration'>
+            <Button className='button' variant="danger" onClick={() => deleteData(DPI)}>Descartar</Button>
+          </td>
+        </tr>
+      )
+    })
+  }
+
+  const filtrar = () => {
+    if (original.length == 0) {
+      original = aplicantes
+    } else {
+      setAplicantes(original)
+    }
+    var del = aplicantes
+    if (filName != "") {
+      del = aplicantes.filter(aplicante => aplicante.NOMBRES == filName)
+      setAplicantes(del)
+    } if (filPuesto != "") {
+      del = aplicantes.filter(aplicante => aplicante.PUESTO == filPuesto)
+      setAplicantes(del)
+    } if (filEstado != "") {
+      del = aplicantes.filter(aplicante => aplicante.ESTADO == filEstado)
+      setAplicantes(del)
+    }
+
+  }
+
+  function quitarFiltros() {
+    window.location.reload();
+  }
+
+  return (
+    <>
       <div>
-        <br />
-        <Link to="/revisor">
-          <button style={{ marginLeft: "2%" }} class="btn btn-success">
-            Regresar
-          </button>
-        </Link><br /><br />
+        <Container >
+          <StyledLink to="/">201909103</StyledLink>
+          <StyledLink to="/">Inicio</StyledLink>
+          <StyledLink to={"/revisor/aplicantes/" + departamento}>Aceptar/Rechazar Aplicantes</StyledLink>
+          <StyledLink to={"/revisor/revision"}>Revisión de Expediente</StyledLink>
+        </Container>
+      </div>
+      <br />
+      <h1 style={{ textAlign: "center", color: "white" }}>Departamento: {departamento}</h1>
+      <br />
+      <div style={{ textAlign: "center", color: "white" }}>
+        Filtros:
+        <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+          type="text" placeholder="Nombre"
+          value={filName}
+          onChange={(e) => setFilName(e.target.value)}
+        />
+        <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+          type="text" placeholder="Puesto"
+          value={filPuesto}
+          onChange={(e) => setFilPuesto(e.target.value)}
+        />
+        <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+          type="text" placeholder="Fecha"
+          value={filEstado}
+          onChange={(e) => setFilEstado(e.target.value)}
+        />
+        <Button variant="success" style={{ marginLeft: "2%" }} onClick={filtrar}>
+          <i>Filtrar</i>
+        </Button>
+        <Button variant="info" style={{ marginLeft: "2%" }} onClick={quitarFiltros}>
+          <i>Quitar Filtros</i>
+        </Button>
+      </div>
 
-        <nav class="navbar navbar-expand-lg navbar-light" style={{ color: "white", marginTop: "2%" }}>
-          <div class="collapse navbar-collapse" id="navbarNav">
-          <Link to="/revisor/aplicantes" style={{ margin: "auto" }}>
-              <button class="btn btn-success">
-                <i>Aceptar o Rechazar Aplicantes</i>
-              </button>
-            </Link>
-
-            <Link to="/revisor/revision" style={{ margin: "auto" }}>
-              <button class="btn btn-info" >
-                <i>Revisión de Expedientes</i>
-              </button>
-            </Link>
-          </div>
-        </nav ><br />
-
-        <div style={{ textAlign: "center", color: "white" }}>
-          Filtros:
-          <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Nombre" name="user" />
-          <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Puesto" name="user" />
-          <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Estado de Expediente" name="user" />
-          <button class="btn btn-success" style={{ marginLeft: "2%" }}>
-            <i>Filtrar</i>
-          </button>
-          <button class="btn btn-info" style={{ marginLeft: "2%" }}>
-            <i>Quitar Filtros</i>
-          </button>
+      <div className="row">
+        <div className="col-md-12">
+          <form style={{
+            margin: "auto",
+            backgroundColor: "#4884af",
+            marginTop: "2%",
+            width: "auto",
+            padding: "2%",
+            borderRadius: "2%",
+            color: "white"
+          }}>
+            <h1 style={{ textAlign: "center" }}>Aplicantes por Aceptar o Rechazar</h1>
+            <table class="table table-sm table-hover" >
+              <thead class="tblsimbolos">
+                <tr>{renderHeader()}</tr>
+              </thead>
+              <tbody class="tblsimbolos">
+                {renderBody()}
+              </tbody>
+            </table>
+          </form>
         </div>
-
-        <div className="row">
-          <div className="col-md-12">
-            <form style={{
-              margin: "auto",
-              backgroundColor: "#4884af",
-              marginTop: "2%",
-              width: "auto",
-              padding: "2%",
-              borderRadius: "2%",
-              color: "white"
-            }}>
-              <h1 style={{ textAlign: "center" }}>Usuarios</h1>
-              <table class="table table-sm table-hover">
-                <tbody class="tblsimbolos">
-                  <td>DPI</td>
-                  <td>NOMBRE</td>
-                  <td>CORREO</td>
-                  <td>DIRECCION</td>
-                  <td>TELEFONO</td>
-                  <td>PUESTO</td>
-                  <td>ESTADO EXPEDIENTE</td>
-                  <td>EXPEDIENTE</td>
-                  {arreglo.map(item => (
-                    <tr key={item.id}>
-                      <td>{item.dpi}</td>
-                      <td>{item.nombre}</td>
-                      <td>{item.correo}</td>
-                      <td>{item.direccion}</td>
-                      <td>{item.telefono}</td>
-                      <td>{item.puesto}</td>
-                      <td>{item.estadoexp}</td>
-                      <td>
-                      <Link to="/revisor/revision/verexp" style={{ margin: "auto" }}>
-                        <button class="btn btn-info" style={{ marginLeft: "2%" }}>
-                          EXPEDIENTE
-                        </button>
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </form>
-          </div>
-        </div>
-        <br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br />
-
-      </div >
-
-    );
-  }
+      </div>
+      <br /><br /><br /><br /><br />
+      <br /><br /><br /><br /><br />
+      <br /><br /><br /><br /><br />
+    </>
+  )
 }
 
-export default RevisorRevision;
+
+export default RevisorRevision

@@ -1,41 +1,39 @@
 import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom';
-import { Redirect } from 'react-router';
+import { Redirect, useParams } from 'react-router';
 import PropTypes from 'prop-types';
 import { Button } from "react-bootstrap";
-import { Login } from '../../utils/api';
+import { LoginGuest } from '../../utils/api';
 
 var arreglo = []
 
 function RevisorLogin ()  {
-  const [name, setName] = useState("")
-  const [departamento, setDepartamento] = useState("");
-  const [password, setPassword] = useState("");
+  const [dpi, setDPI] = useState("")
+  const [correo, setCorreo] = useState("");
   const [redirect, setRedirect] = useState(false);
 
   const renderRedirect = () => {
     if (redirect) {
-      return <Redirect to={'/revisor/aplicantes/'+departamento} />
+      return <Redirect to={'/guestLogin/messenger/'+dpi} />
     }
   }
 
   const IniciarSesion = () => {
-    console.log(name)
-    console.log(password)
-    Login(name, password)
+    console.log(dpi)
+    console.log(correo)
+    LoginGuest(dpi, correo)
       .then(res => {
         console.log(res)
         if (res.data.length == 0) {
           setRedirect(false)
           alert("Datos incorrectos")
         } else {
-          if (res.data[0].TIPO == "Revisor" && res.data[0].ESTADO == "Activo") {
-            setDepartamento(res.data[0].DEPARTAMENTO)
+          if (res.data[0].ESTADO == "aceptado" || res.data[0].ESTADO == "pendiente") {
             setRedirect(true)
             alert("Bienvenido")
           }else{
             setRedirect(false)
-            alert("No es un revisor activo")
+            alert("Usted ya no es Aplicante")
           }
         }
       })
@@ -54,14 +52,14 @@ function RevisorLogin ()  {
       <br /><br />
       <br /><br />
       <form style={{ textAlign: "center", alignItems: "center", color: "white" }}>
-        <h1 style={{ color: "white" }}>Iniciar Sesión como Revisor de Expedientes</h1>
+        <h1 style={{ color: "white" }}>Centro de Correo Aplicantes</h1>
         <label>
-          Nombre de Usuario: <input style={{ marginLeft: "2%", marginBottom: "2%" }}
-            type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          DPI/CUI: <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+            type="text" value={dpi} onChange={(e) => setDPI(e.target.value)} />
         </label><br />
         <label>
-          Contraseña: <input style={{ marginLeft: "2%", marginBottom: "2%" }}
-            type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          Correo Electronico: <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+            type="text" value={correo} onChange={(e) => setCorreo(e.target.value)} />
         </label><br />
         <br />
         {renderRedirect()}
