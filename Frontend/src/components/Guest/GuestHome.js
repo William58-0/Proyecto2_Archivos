@@ -21,13 +21,9 @@ const responsive = {
     paritialVisibilityGutter: 40
   }
 };
-//const colors = ["red", "green", "blue", "orange"];
 
 var original=[]
 
-
-// Because this is an inframe, so the SSR mode doesn't not do well here.
-// It will work on real devices.
 const GuestHome = ({ deviceType }) => {
   const [calificacion, setCalificacion] = useState("");
   const [puestos, setPuestos] = useState([]);
@@ -37,7 +33,6 @@ const GuestHome = ({ deviceType }) => {
   const [filDep, setFilDep] = useState("");
   const [filCal, setFilCal] = useState("");
   
-
   const filtrar = () => {
     if(original.length==0){
       original=puestos
@@ -149,7 +144,7 @@ const GuestHome = ({ deviceType }) => {
 
                 <div class="card-header d-flex justify-content-between align-items-center">
                   <Link to={"/guest/form/"+puesto.NOMBRE+"/"+puesto.DEPARTAMENTO}>
-                    <button class="btn btn-success" onClick={() => { alert(puesto.NOMBRE) }}>
+                    <button class="btn btn-success" >
                       Seleccionar
                     </button>
                   </Link>

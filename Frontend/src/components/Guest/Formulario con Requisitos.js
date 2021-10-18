@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
+import { Redirect } from 'react-router';
 import { Link, useParams } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
 import { MDBTable, MDBTableBody, MDBTableHead } from 'mdbreact';
 
 import { getRequisitos } from '../../utils/api';
+import { getRevisor } from '../../utils/api';
 import { insertAplicante } from '../../utils/api';
 
 function GuestForm() {
@@ -12,10 +14,16 @@ function GuestForm() {
   const [requisitos, setReq] = useState([]);
   const [departamento, setDep] = useState(useParams().departamento)
   const [puesto, setPuesto] = useState(useParams().puesto)
+  const [redirect, setRedirect] = useState(false);
+  const [revisor, setRev] = useState("");
 
   useEffect(() => {
     getData()
   }, [])
+
+  useEffect(() => {
+    getRev()
+  }, "")
 
   const getData = async () => {
     const response = await getRequisitos(departamento, puesto)
@@ -28,25 +36,33 @@ function GuestForm() {
         var actual = response.data[i].NOMBRE
         var formatos = response.data[i].FORMATO
         for (let j = 0; j < response.data.length; j++) {
-          if (response.data[j].NOMBRE == actual && !escritos.includes(response.data[j].NOMBRE) && i!=j) {
+          if (response.data[j].NOMBRE == actual && !escritos.includes(response.data[j].NOMBRE) && i != j) {
             formatos += ", " + response.data[j].FORMATO
           }
         }
         var nuevo = {
-          FORMATO: formatos,
           NOMBRE: actual,
+          FORMATO: formatos,
           TAMANIO: response.data[i].TAMANIO,
-          OBLIGATORIO: response.data[i].OBLIGATORIO
+          OBLIGATORIO: EsObg(response.data[i].OBLIGATORIO)
         }
         nuevos.push(nuevo)
         escritos.push(response.data[i].NOMBRE)
       }
-      
     }
-
+    nuevos.push({NOMBRE:"CV",FORMATO:"PDF",TAMANIO:"5",OBLIGATORIO:"Sí"})
     setReq(nuevos)
   }
 
+  const getRev = async () => {
+    const responseRev = await getRevisor(departamento)
+    console.log(responseRev)
+    if (responseRev.data.length > 0) {
+      setRev(responseRev.data[0].NOMBRE)
+    }else{
+      setRev("NO DISPONIBLE")
+    }
+  }
   const columns = [
     {
       label: 'Requisito'
@@ -62,6 +78,13 @@ function GuestForm() {
     }
   ]
 
+  function EsObg(num){
+    if(num==1){
+      return "Sí"
+    }else{
+      return "No"
+    }
+  }
   const renderRedirect = () => {
     if (redirect) {
       return <Redirect to='/guest' />
@@ -103,7 +126,7 @@ function GuestForm() {
     })
       .then(res => { // then print response status
         console.warn(res);
-        if(res.data=="sepudo"){
+        if (res.data == "sepudo") {
           alert("Archivo Subido Correctamente!")
         }
       })
@@ -117,15 +140,17 @@ function GuestForm() {
     console.log(direccion)
     console.log(telefono)
     insertAplicante(dpi, nombres, apellidos, correo, direccion, telefono, departamento, puesto)
-            .then(res => {
-                console.log(res)
-                alert("ANOTE SU CONTRASEÑA: "+res.data)
-                setRedirect(true)
-            })
-            .catch((err) => {
-            console.log(err) 
-            setRedirect(false)
-            });
+      .then(res => {
+        console.log(res)
+        alert("Formulario enviado")
+        //alert("ANOTE SU CONTRASEÑA: " + res.data)
+        setRedirect(true)
+      })
+      .catch((err) => {
+        console.log(err)
+        setRedirect(false)
+        alert("Corrija los datos")
+      });
   }
 
   return (
@@ -207,6 +232,7 @@ function GuestForm() {
               <div >
                 <div className="row">
                   <div className="col-md-12">
+                  <p style={{ color: "white" }}>Su revisor será: {revisor}</p>
                     <form style={{
                       margin: "auto",
                       backgroundColor: "#4884af",
@@ -215,7 +241,7 @@ function GuestForm() {
                       padding: "2%",
                       borderRadius: "2%",
                       color: "white"
-                    }}>
+                    }}>  
                       <h1 style={{ textAlign: "center" }}>Requisitos</h1>
                       <MDBTable scrollY >
                         <MDBTableHead columns={columns} />
@@ -244,7 +270,7 @@ function GuestForm() {
             </div>
             {renderRedirect()}
             <div style={{ textAlign: "center" }}>
-                <button class="btn btn-success" onClick={() => Enviar()}>Enviar Formulario</button><br /><br />
+              <button class="btn btn-success" onClick={() => Enviar()}>Enviar Formulario</button><br /><br />
             </div>
           </Col>
 

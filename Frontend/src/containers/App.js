@@ -107,12 +107,12 @@ class App extends Component {
                 component={RevisorLogin}
               />
               <Route
-                path="/revisor/aplicantes"
+                path="/revisor/aplicantes/:departamento"
                 exact
                 component={RevisorAplicantes}
               />
               <Route
-                path="/revisor/revision"
+                path="/revisor/revision/:departamento"
                 exact
                 component={RevisorRevision}
               />

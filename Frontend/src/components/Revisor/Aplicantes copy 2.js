@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react'
-import { getUsuarios } from '../../../utils/api';
-import { eliminarusuario } from '../../../utils/api';
+import { getUsuarios } from '../../utils/api';
+import { eliminarusuario } from '../../utils/api';
 import { Link } from 'react-router-dom';
 import { Button } from "react-bootstrap";
+import NavBarRevisor from './NavBarRevisor';
 
+var original = []
 
-var arreglo = []
-
-const Table = () => {
+const AdminUsers = () => {
     const [usuarios, setUsuarios] = useState([])
+    const [filName, setFilName] = useState("");
+    const [filEstado, setFilEstado] = useState("");
+    const [filInicio, setFilInicio] = useState("");
+    const [filFin, setFilFin] = useState("");
+    const [filTipo, setFilTipo] = useState("");
+
 
     useEffect(() => {
         getData()
@@ -32,11 +38,11 @@ const Table = () => {
             }
         }
         setUsuarios(nuevo)
-        eliminarusuario()
-        .then(res => {
-          console.log(res)
-        })
-        .catch((err) => console.log(err));
+        eliminarusuario(NOMBRE)
+            .then(res => {
+                console.log(res)
+            })
+            .catch((err) => console.log(err));
         //const del = usuarios.filter(usuario => NOMBRE !== usuario.NOMBRE)
     }
 
@@ -73,8 +79,39 @@ const Table = () => {
         })
     }
 
+    const filtrar = () => {
+        if(original.length==0){
+            original=usuarios
+          }else{
+            setUsuarios(original)
+          }
+        var del = usuarios
+        if (filName != "") {
+            del = usuarios.filter(usuario => usuario.NOMBRE == filName)
+            setUsuarios(del)
+        } if (filEstado != "") {
+            del = usuarios.filter(usuario => usuario.ESTADO == filEstado)
+            setUsuarios(del)
+        } if (filInicio != "") {
+            del = usuarios.filter(usuario => usuario.INICIO == filInicio)
+            setUsuarios(del)
+        } if (filFin != "") {
+            del = usuarios.filter(usuario => usuario.FIN == filFin)
+            setUsuarios(del)
+        } if (filTipo != "") {
+            del = usuarios.filter(usuario => usuario.TIPO == filTipo)
+            setUsuarios(del)
+        }
+
+    }
+
+    function quitarFiltros() {
+        window.location.reload();
+    }
+
     return (
         <>
+        <NavBarRevisor />
             <br />
             <Link to="/adminsistema/adminusershome">
                 <button style={{ marginLeft: "2%" }} class="btn btn-success">
@@ -84,18 +121,38 @@ const Table = () => {
 
             <div style={{ textAlign: "center", color: "white" }}>
                 Filtros:
-                <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Nombre" name="user" />
-                <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Estado" name="user" />
-                <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Fecha Inicio" name="user" />
-                <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Fecha FIn" name="user" />
-                <input style={{ marginLeft: "2%", marginBottom: "2%" }} type="text" placeholder="Rol" name="user" />
+                <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+                    type="text" placeholder="Nombre"
+                    value={filName}
+                    onChange={(e) => setFilName(e.target.value)}
+                />
+                <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+                    type="text" placeholder="Estado"
+                    value={filEstado}
+                    onChange={(e) => setFilEstado(e.target.value)}
+                />
+                <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+                    type="text" placeholder="Fecha Inicio"
+                    value={filInicio}
+                    onChange={(e) => setFilInicio(e.target.value)}
+                />
+                <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+                    type="text" placeholder="Fecha Fin"
+                    value={filFin}
+                    onChange={(e) => setFilFin(e.target.value)}
+                />
+                <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+                    type="text" placeholder="Rol"
+                    value={filTipo}
+                    onChange={(e) => setFilTipo(e.target.value)}
+                />
                 <br />
-                <button class="btn btn-success" style={{ marginLeft: "2%" }}>
+                <Button variant="success" style={{ marginLeft: "2%" }} onClick={filtrar}>
                     <i>Filtrar</i>
-                </button>
-                <button class="btn btn-info" style={{ marginLeft: "2%" }}>
+                </Button>
+                <Button variant="info" style={{ marginLeft: "2%" }} onClick={quitarFiltros}>
                     <i>Quitar Filtros</i>
-                </button>
+                </Button>
             </div>
 
             <div className="row">
@@ -129,4 +186,4 @@ const Table = () => {
 }
 
 
-export default Table
+export default AdminUsers

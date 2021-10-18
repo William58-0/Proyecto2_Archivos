@@ -80,12 +80,10 @@ router.post("/getUsuario", async function (req, res, next) {
       .status(200)
       .json(responseUser.data);
   }
-
 });
 
 router.post("/getRequisitos", async function (req, res, next) {
   const { departamento, puesto } = req.body;
-
   let responseReq = await service.connect(
     `SELECT DISTINCT NOMBRE, FORMATO, TAMANIO, OBLIGATORIO FROM REQUISITO WHERE DEPARTAMENTO ='${departamento}' AND PUESTO='${puesto}'`
   );
@@ -112,15 +110,10 @@ const uploadImage = multer({
 }).single('image');
 
 router.post('/imageupload', async (req, res) => {
-  console.log("hollaa")
   try {
-      // 'avatar' is the name of our file input field in the HTML form
      let upload = multer({ storage: storage}).single('avatar');
      
      upload(req, res, function(err) {
-         // req.file contains information of uploaded file
-         // req.body contains information of text fields
-
          if (!req.file) {
              return res.send('Seleccionar archivo');
          }

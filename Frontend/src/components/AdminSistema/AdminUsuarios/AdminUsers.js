@@ -6,7 +6,7 @@ import { Button } from "react-bootstrap";
 
 var original = []
 
-const Table = () => {
+const AdminUsers = () => {
     const [usuarios, setUsuarios] = useState([])
     const [filName, setFilName] = useState("");
     const [filEstado, setFilEstado] = useState("");
@@ -42,7 +42,6 @@ const Table = () => {
                 console.log(res)
             })
             .catch((err) => console.log(err));
-        //const del = usuarios.filter(usuario => NOMBRE !== usuario.NOMBRE)
     }
 
     const renderHeader = () => {
@@ -184,4 +183,4 @@ const Table = () => {
 }
 
 
-export default Table
+export default AdminUsers

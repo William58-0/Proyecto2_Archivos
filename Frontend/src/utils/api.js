@@ -1,66 +1,120 @@
 import axios from 'axios';
 import { useParams } from 'react-router';
 
-export function cargamasiva(text) {
-  const texto = { texto: text };
-  return axios.post('http://localhost:9000/AdminSistema/cargamasiva', texto)
-}
-
-export function registrarusuario(name, password, tipo, departamento) {
-  const usuario = {nombre:name, contrasenia: password, tipo:tipo, departamento:departamento }; 
-  return axios.post('http://localhost:9000/AdminSistema/registrarusuario', usuario)
-}
-
-export function editarusuario(original, name, password, tipo, departamento) {
-  const usuario = {original: original, nombre:name, contrasenia: password, tipo:tipo, departamento:departamento }; 
-  return axios.post('http://localhost:9000/AdminSistema/editarusuario', usuario)
-}
-
-export function eliminarusuario(name) {
-  const usuario = {nombre: name}; 
-  return axios.post('http://localhost:9000/AdminSistema/eliminarusuario', usuario)
-}
-
+// --------------------------------------------------------------------------------------- Generales
+// Obtiene los departamentos existentes para mostrarlos en el form de crear usuario
 export function getDepartamentos() {
   return axios.get('http://localhost:9000/getDepartamentos')
 }
 
+// Obtiene los puestos existentes para mostrarlos en el form de crear usuario
 export function getPuestos() {
   return axios.get('http://localhost:9000/getPuestos')
 }
 
+// Para que un coordinador o revisor pueda entrar a la plataforma
 export function Login(nombre, contrasenia) {
   const usuario={ nombre, contrasenia }
   return axios.post('http://localhost:9000/Login', usuario)
 }
 
+// Obtiene los coordinadores y revisores
+export function getUsuarios() {
+  return axios.get('http://localhost:9000/getUsuarios')
+}
+
+// Obtiene un coordinador o revisor especifico
+export function getUsuario(nombre) {
+  return axios.post('http://localhost:9000/getUsuario', nombre)
+}
+
+// --------------------------------------------------------------------------------------- AdminUsers
+// Para cargar el xml
+export function cargamasiva(text) {
+  const texto = { texto: text };
+  return axios.post('http://localhost:9000/AdminSistema/cargamasiva', texto)
+}
+
+// Para registrar un coordinador o revisor
+export function registrarusuario(name, password, tipo, departamento) {
+  const usuario = {nombre:name, contrasenia: password, tipo:tipo, departamento:departamento }; 
+  return axios.post('http://localhost:9000/AdminSistema/registrarusuario', usuario)
+}
+
+// Para actualizar los datos de un coordinador o revisor
+export function editarusuario(original, name, password, tipo, departamento) {
+  const usuario = {original: original, nombre:name, contrasenia: password, tipo:tipo, departamento:departamento }; 
+  return axios.post('http://localhost:9000/AdminSistema/editarusuario', usuario)
+}
+
+// Para eliminar un coordinador o revisor (solo cambia su estado a inactivo)
+export function eliminarusuario(name) {
+  const usuario = {nombre: name}; 
+  return axios.post('http://localhost:9000/AdminSistema/eliminarusuario', usuario)
+}
+
+// ------------------------------------------------------------------------------------------ CoordDep
+// Obtiene los aplicantes de su departamento
+export function getAplicantesC(dept){
+  return axios.post('http://localhost:9000/CoordDep/getAplicantes', dept)
+}
+
+// Obtiene los empleados de su departamento
+export function getEmpleadosC(dept){
+  return axios.post('http://localhost:9000/CoordDep/getEmpleados', dept)
+}
+
+// ------------------------------------------------------------------------------------------ Revisor
+// Obtiene los aplicantes de su departamento
+export function getAplicantesR(dept){
+  const departamento={dept}
+  return axios.post('http://localhost:9000/Revisor/getAplicantesR', departamento)
+}
+
+// Obtiene los empleados de su departamento
+export function getEmpleadosR(dept){
+  const departamento={dept}
+  return axios.post('http://localhost:9000/Revisor/getEmpleadosR', departamento)
+}
+
+// Acepta a un aplicante
+export function aceptarAplicante(dpi){
+  const aplicante={dpi}
+  return axios.post('http://localhost:9000/Revisor/aceptarAplicante', aplicante)
+}
+
+// ------------------------------------------------------------------------------------------ Aplicante
+// Para que un aplicante pueda entrar a la plataforma
 export function LoginAplicante(dpi, contrasenia) {
   const aplicante={ dpi, contrasenia }
   return axios.post('http://localhost:9000/Aplicante/LoginAplicante', aplicante)
 }
 
-export function getUsuarios() {
-  return axios.get('http://localhost:9000/getUsuarios')
-}
-
-export function getUsuario(nombre) {
-  return axios.post('http://localhost:9000/getUsuario', nombre)
-}
-
+// Obtiene el listado de requisitos de un puesto
 export function getRequisitos(departamento, puesto) {
   const info = { departamento, puesto }
   return axios.post('http://localhost:9000/getRequisitos', info)
 }
 
+// ------------------------------------------------------------------------------------------ Guest
+// Obtiene el revisor con menos carga para asignarselo al guest
 export function getRevisor(departamento) {
   const dept = { departamento }
-  return axios.post('http://localhost:9000/Aplicante/getRevisor', dept)
+  return axios.post('http://localhost:9000/Guest/getRevisor', dept)
 }
 
+// Inserta los datos del nuevo aplicante, tambien suma el trabajo del revisor asignado
 export function insertAplicante(dpi, nombres, apellidos, correo, direccion, telefono, depart, puesto, revisor) {
-  const aspirante = { dpi, nombres, apellidos, correo, direccion, telefono, depart, puesto, revisor }
-  return axios.post('http://localhost:9000/Aplicante/insertAplicante', aspirante)
+  const aplicante = { dpi, nombres, apellidos, correo, direccion, telefono, depart, puesto, revisor }
+  return axios.post('http://localhost:9000/Guest/insertAplicante', aplicante)
 }
+
+
+
+
+
+
+
 
 export function getC3D(text) {
   const texto = { texto: text };

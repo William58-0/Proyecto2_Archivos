@@ -10,20 +10,58 @@ router.use(cors({ origin: true, optionsSuccessStatus: 200 }));
 router.use(bodyParser.json({ limit: "50mb", extended: true }));
 router.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
-// Para que el aplicante ingrese a la plataforma
-router.post("/LoginAplicante", async function (req, res, next) {
-  const { dpi, contrasenia } = req.body
-  let responseLogin = await service.connect(
-    `SELECT * FROM APLICANTE WHERE DPI = ${dpi} AND Contrasenia='${contrasenia}'`
+// inserta un nuevo aplicante cuando el que era guest llena sus datos
+router.post("/insertAplicante", async function (req, res, next) {
+  const { dpi, nombres, apellidos, correo, direccion, telefono, depart, puesto, revisor } = req.body
+  const fechainicio = now.getDay() + "/" + now.getMonth() + "/" + now.getFullYear()
+  // INSERT INTO APLICANTE_EMPLEADO VALUES
+  // (2797652900101,'william alejandro', 'borrayo alarcon', '-', 'wiliamborryo@gmail.com', 'casa', '1234', 'pendiente', 'hoy', 'maniana','reev1', 'uno', 'unopuesto' );
+  let respInsApl = await service.connect(
+    `INSERT INTO APLICANTE_EMPLEADO VALUES
+    (${dpi},'${nombres}','${apellidos}','-','${correo}','${direccion}','${telefono}','pendiente','${fechainicio}','-','${revisor}','${depart}','${puesto}')`
   );
-  if (responseLogin.status == 400) {
-    res.status(400).json({ message: responseLogin.message });
+  console.log(respInsApl)
+  if (respInsApl.status == 400) {
+    res.status(400).json({ message: respInsApl.message });
   } else {
     res
       .status(200)
-      .json(responseLogin.data);
+      .json(respInsApl.data);
+  }
+  // se actualiza el trabajo del revisor
+  // UPDATE COORDINADOR_REVISOR SET ParaRevisar = ParaRevisar + 1 WHERE Nombre='reev1' AND Tipo='Revisor' AND Departamento='uno' AND Estado='Activo'
+  let respTrabRev = await service.connect(
+    `UPDATE COORDINADOR_REVISOR SET ParaRevisar = ParaRevisar + 1 WHERE Nombre = '${revisor}' AND Tipo='Revisor' AND Departamento='${depart}' AND Estado='Activo'`
+  );
+  console.log(respTrabRev)
+  if (respTrabRev.status == 400) {
+    res.status(400).json({ message: respTrabRev.message });
+  } else {
+    res
+      .status(200)
+      .json(respTrabRev.data);
   }
 });
+
+// Selecciona al revisor con menos trabajo para asignarselo al nuevo aplicante
+router.post("/getRevisor", async function (req, res, next) {
+  const { departamento } = req.body
+  // SELECT Nombre FROM COORDINADOR_REVISOR t WHERE t.ParaRevisar = ( SELECT MIN( ParaRevisar )
+  // FROM COORDINADOR_REVISOR WHERE Tipo='Revisor' AND DEPARTAMENTO = 'RRHH') AND t.Tipo='Revisor' AND t.DEPARTAMENTO = 'RRHH'
+  let respGetRev = await service.connect(
+    `SELECT Nombre FROM COORDINADOR_REVISOR t WHERE t.ParaRevisar = ( SELECT MIN( ParaRevisar )  FROM COORDINADOR_REVISOR WHERE Tipo='Revisor' AND DEPARTAMENTO = '${departamento}') AND t.Tipo='Revisor' AND t.DEPARTAMENTO = '${departamento}'`
+  );
+  console.log(respGetRev)
+  if (respGetRev.status == 400) {
+    res.status(400).json({ message: respGetRev.message });
+  } else {
+    res
+      .status(200)
+      .json(respGetRev.data);
+  }
+});
+
+
 
 
 router.post("/cargamasiva", async function (req, res, next) {

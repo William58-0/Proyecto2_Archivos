@@ -87,8 +87,12 @@ BEGIN UPDATE COORDINADOR_REVISOR SET Nombre='alejandro', Contrasenia='nueva', Ti
 
 SELECT Nombre FROM COORDINADOR_REVISOR t WHERE t.ParaRevisar = ( SELECT MIN( ParaRevisar )  FROM COORDINADOR_REVISOR) AND t.Tipo='Revisor' AND t.DEPARTAMENTO = 'uno'
 
+UPDATE COORDINADOR_REVISOR SET ParaRevisar = ParaRevisar + 1 WHERE Nombre='reev1' AND Tipo='Revisor' AND Departamento='uno' AND Estado='Activo'
+
 SELECT * FROM COORDINADOR_REVISOR;
 DROP TABLE COORDINADOR_REVISOR;
+SELECT Nombre FROM COORDINADOR_REVISOR t WHERE t.ParaRevisar = ( SELECT MIN( ParaRevisar )
+FROM COORDINADOR_REVISOR WHERE Tipo='Revisor' AND DEPARTAMENTO = 'RRHH') AND t.Tipo='Revisor' AND t.DEPARTAMENTO = 'RRHH'
 
 ----------------------------------------------------------------- TABLA APLICANTE_EMPLEADO
 CREATE TABLE APLICANTE_EMPLEADO(
@@ -114,6 +118,7 @@ SELECT * FROM APLICANTE_EMPLEADO;
 INSERT INTO APLICANTE_EMPLEADO VALUES
 (2797652900101,'william alejandro', 'borrayo alarcon', '4321', 'wiliamborryo@gmail.com', 'casa', '1234', 'pendiente', 'hoy', 'maniana','reev1' ,'uno', 'unopuesto' );
 
+UPDATE APLICANTE_EMPLEADO SET Estado='pendiente' WHERE DPI=787489379824
 
 ----------------------------------------------------------------------------------------------------
 

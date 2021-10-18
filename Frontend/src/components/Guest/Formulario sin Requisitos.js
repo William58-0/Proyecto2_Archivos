@@ -104,14 +104,12 @@ function GuestForm() {
     insertAplicante(dpi, nombres, apellidos, correo, direccion, telefono, departamento, puesto, revisor)
             .then(res => {
                 console.log(res)
-                alert("Formulario enviado!")
                 //alert("ANOTE SU CONTRASEÑA: "+res.data)
                 setRedirect(true)
             })
             .catch((err) => {
             console.log(err) 
             setRedirect(false)
-            alert("Corrija los datos")
             });
   }
 
