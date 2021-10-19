@@ -135,10 +135,8 @@ router.post("/sendMessage", async function (req, res, next) {
   }
 });
 
-
-
 const storage = multer.diskStorage({
-  destination: path.join(__dirname, './public_html/', 'uploads'),
+  destination: path.join(__dirname, '../Documentos/'),
   filename: function (req, file, cb) {
     console.log(file)
     // null as first argument means no error
@@ -154,7 +152,9 @@ router.post('/imageupload', async (req, res) => {
   try {
     let upload = multer({ storage: storage }).single('avatar');
 
-    upload(req, res, function (err) {
+    upload(req, res, async function (err) {
+      
+
       if (!req.file) {
         return res.send('Seleccionar archivo');
       }
@@ -164,15 +164,82 @@ router.post('/imageupload', async (req, res) => {
       else if (err) {
         return res.send(err);
       } else {
-        return res.send('sepudo');
-      }
+        const classifiedsadd = {
+          name: req.file.filename
+        };
+        var orgname=classifiedsadd.name
+        var formato=orgname.split(".",2)[1]
+        var name=(orgname.split("_",2)[1]).split(".",2)[0]
+        var aplicante=orgname.split("_",2)[0]
+        console.log(orgname)
+        console.log(formato)
+        console.log(name)
+        console.log(aplicante)
+        // primero ve si existe el documento
+        let respDocIn1 = await service.connect(
+          `SELECT * FROM DOCUMENTO WHERE Nombre='${name}' AND Formato='${formato}' AND Aplicante='${aplicante}'`
+        );
 
-      const classifiedsadd = {
-        image: req.file.filename
-      };
+        console.log("lo primero")
+        console.log(respDocIn1)
+        // si no existe inserta uno nuevo
+        if(respDocIn1.data.length==0){
+          let respDocIn = await service.connect(
+            `INSERT INTO DOCUMENTO VALUES('${name}','${formato}', 'pendiente', '${aplicante}')`
+          );
+          console.log(respDocIn)
+        
+          if (respDocIn.status == 400) {
+            res.status(400).json({ message: respDocIn.message });
+          } else {
+            res
+              .status(200)
+              .json('sepudo');
+          }
+        }
+        // si ya existe solo le actualiza el estado a pendiente
+        else{
+          let respDocIn = await service.connect(
+            `UPDATE DOCUMENTO SET Estado='pendiente' WHERE Nombre='${name}' AND Formato='${formato}' AND Aplicante='${aplicante}'`
+          );
+          console.log(respDocIn)
+        
+          if (respDocIn.status == 400) {
+            res.status(400).json({ message: respDocIn.message });
+          } else {
+            res
+              .status(200)
+              .json('sepudo');
+          }
+        }
+      }
 
     });
   } catch (err) { console.log(err) }
+});
+
+function GuardarArchivo(name, ){
+
+}
+
+router.post("/abrirDocumento", async function (req, res, next) {
+  const { dpi, documento } = req.body;
+  console.log(dpi)
+  console.log(documento)
+
+  const fs = require('fs');
+
+  // destination.txt will be created or overwritten by default.
+  fs.copyFile('./Documentos/file.pdf', './../Frontend/src/Documentos/file.pdf', (err) => {
+    if (err) {res.status(400).json(err);}
+    else {
+      res
+        .status(200)
+        .json("Se cargo archivo");
+    }
+    console.log('archivo copiado');
+  });
+
 });
 
 

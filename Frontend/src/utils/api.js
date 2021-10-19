@@ -40,6 +40,12 @@ export function sendMessage(emisor, texto, receptor) {
   return axios.post('http://localhost:9000/sendMessage', msj)
 }
 
+// Abrir Documento
+export function abrirDocumento(dpi, documento) {
+  const info = { dpi, documento }
+  return axios.post('http://localhost:9000/abrirDocumento', info)
+}
+
 // --------------------------------------------------------------------------------------- AdminUsers
 // Para cargar el xml
 export function cargamasiva(text) {

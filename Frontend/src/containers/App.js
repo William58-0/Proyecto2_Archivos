@@ -123,7 +123,7 @@ class App extends Component {
                 component={RevisorRevision}
               />
               <Route
-                path="/revisor/revision/:dpi"
+                path="/revisor/revision/verExp/:revisor/:dpi/:departamento/:puesto"
                 exact
                 component={RevisorVerExp}
               />

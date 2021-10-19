@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { getAplicantesR } from '../../utils/api';
-import { eliminarusuario, aceptarAplicante } from '../../utils/api';
+import { eliminarusuario, aceptarAplicante, abrirDocumento } from '../../utils/api';
 import { Link, useParams } from 'react-router-dom';
+import { Redirect } from 'react-router';
 import { Button } from "react-bootstrap";
 import styled from 'styled-components';
+import Pdf from "../../Documentos/file.pdf";
 
 var original = []
 
@@ -25,14 +27,11 @@ const Container = styled.div`
 `;
 
 function RevisorAplicantes() {
-  console.log(useParams().departamento)
   const [aplicantes, setAplicantes] = useState([])
-  const [departamento, setDep] = useState(useParams().departamento)
   const [revisor, serRev] = useState(useParams().revisor)
   const [filName, setFilName] = useState("");
   const [filPuesto, setFilPuesto] = useState("");
   const [filFecha, setFilFecha] = useState("");
-
 
   useEffect(() => {
     getData()
@@ -41,9 +40,9 @@ function RevisorAplicantes() {
   const getData = async () => {
     const response = await getAplicantesR(revisor)
     console.log(response)
-    var nuevo=[]
+    var nuevo = []
     for (let i = 0; i < response.data.length; i++) {
-      if(response.data[i].ESTADO=='pendiente'){
+      if (response.data[i].ESTADO == 'pendiente') {
         var nombre = response.data[i].NOMBRES.split(" ", 1)[0] + " " + response.data[i].APELLIDOS.split(" ", 1)[0]
         response.data[i].NOMBRES = nombre
         nuevo.push(response.data[i])
@@ -74,7 +73,6 @@ function RevisorAplicantes() {
   }
 
   const aceptar = (DPI) => {
-
     aceptarAplicante(DPI)
       .then(res => {
         console.log(res)
@@ -87,6 +85,21 @@ function RevisorAplicantes() {
         alert("Ocurrio un error")
       });
     //const del = aplicantes.filter(usuario => NOMBRE !== usuario.NOMBRE)
+  }
+
+  const abrirCV = (DPI) => {
+    abrirDocumento(DPI, "CV")
+      .then(res => {
+        alert("Archivo Cargado")
+      })
+      .catch((err) => {
+        console.log(err)
+        alert("Ocurrio un error")    
+      });
+  };
+
+  function OpenFile(){
+    window.open(Pdf);
   }
 
   const renderHeader = () => {
@@ -109,14 +122,10 @@ function RevisorAplicantes() {
           <td>{FECHAINICIO}</td>
 
           <td className='opration'>
-            <Link to={'/adminsistema/EditUser/' + DPI}>
-              <button class="btn btn-info">
-                CV
-              </button>
-            </Link>
+              <Button variant="info" onClick={() => abrirCV(DPI)}>Cargar CV</Button>
           </td>
           <td className='opration'>
-            <Button className='button' variant="success" onClick={() => aceptar(DPI)}>Aceptar</Button>
+            <Button className='button' onClick={() => aceptar(DPI)}>Aceptar</Button>
           </td>
           <td className='opration'>
             <Button className='button' variant="danger" onClick={() => deleteData(DPI)}>Descartar</Button>
@@ -156,14 +165,13 @@ function RevisorAplicantes() {
         <Container >
           <StyledLink to="/">201909103</StyledLink>
           <StyledLink to="/">Inicio</StyledLink>
-          <StyledLink to={"/revisor/aplicantes/"+revisor}>Aceptar/Rechazar Aplicantes</StyledLink>
-          <StyledLink to={"/revisor/revision/"+revisor}>Revisión de Expediente</StyledLink>
-          <StyledLink to={"/revisor/messenger/"+revisor}>CHAT</StyledLink>
-
+          <StyledLink to={"/revisor/aplicantes/" + revisor}>Aceptar/Rechazar Aplicantes</StyledLink>
+          <StyledLink to={"/revisor/revision/" + revisor}>Revisión de Expediente</StyledLink>
+          <StyledLink to={"/revisor/messenger/" + revisor}>CHAT</StyledLink>
         </Container>
       </div>
       <br />
-      <h1 style={{ textAlign: "center", color: "white" }}>Departamento: {departamento}</h1>
+      <h1 style={{ textAlign: "center", color: "white" }}>Revisor: {revisor}</h1>
       <br />
       <div style={{ textAlign: "center", color: "white" }}>
         Filtros:
@@ -202,6 +210,8 @@ function RevisorAplicantes() {
             color: "white"
           }}>
             <h1 style={{ textAlign: "center" }}>Aplicantes por Aceptar o Rechazar</h1>
+            <div style={{textAlign:"right"}}><Button  variant="info" onClick={() => OpenFile()}>Abrir CV</Button></div>
+            <br />
             <table class="table table-sm table-hover" >
               <thead class="tblsimbolos">
                 <tr>{renderHeader()}</tr>
@@ -213,6 +223,7 @@ function RevisorAplicantes() {
           </form>
         </div>
       </div>
+
       <br /><br /><br /><br /><br />
       <br /><br /><br /><br /><br />
       <br /><br /><br /><br /><br />

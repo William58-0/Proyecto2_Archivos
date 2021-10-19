@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { getAplicantesR } from '../../utils/api';
-import { eliminarusuario, aceptarAplicante } from '../../utils/api';
 import { Link, useParams } from 'react-router-dom';
 import { Button } from "react-bootstrap";
 import styled from 'styled-components';
+import Pdf from "../../Documentos/file.pdf";
 
 var original = []
 
@@ -25,74 +25,39 @@ const Container = styled.div`
 `;
 
 function RevisorRevision() {
-  console.log(useParams().departamento)
   const [aplicantes, setAplicantes] = useState([])
-  const [departamento, setDep] = useState(useParams().departamento)
+  const [revisor, serRev] = useState(useParams().revisor)
   const [filName, setFilName] = useState("");
   const [filPuesto, setFilPuesto] = useState("");
   const [filEstado, setFilEstado] = useState("");
-
 
   useEffect(() => {
     getData()
   }, [])
 
   const getData = async () => {
-    const response = await getAplicantesR(departamento)
+    const response = await getAplicantesR(revisor)
     console.log(response)
-    for (let i = 0; i < response.data.length; i++) {
-      //var splitted = str.split(" ", 3); 
-      var nombre = response.data[i].NOMBRES.split(" ", 1)[0] + " " + response.data[i].APELLIDOS.split(" ", 1)[0]
-      response.data[i].NOMBRES = nombre
-    }
-    setAplicantes(response.data)
-  }
-
-  const deleteData = (NOMBRE) => {
     var nuevo = []
-    for (let i = 0; i < aplicantes.length; i++) {
-      if (aplicantes[i].NOMBRE == NOMBRE) {
-        var obj = aplicantes[i]
-        obj.FECHAFIN = "ahorita"
-        nuevo.push(obj)
-      } else {
-        nuevo.push(aplicantes[i])
+    for (let i = 0; i < response.data.length; i++) {
+      if (response.data[i].ESTADO == 'pendiente') {
+        var nombre = response.data[i].NOMBRES.split(" ", 1)[0] + " " + response.data[i].APELLIDOS.split(" ", 1)[0]
+        response.data[i].NOMBRES = nombre
+        nuevo.push(response.data[i])
       }
     }
     setAplicantes(nuevo)
-    eliminarusuario(NOMBRE)
-      .then(res => {
-        console.log(res)
-      })
-      .catch((err) => console.log(err));
-    //const del = aplicantes.filter(usuario => NOMBRE !== usuario.NOMBRE)
-  }
-
-  const aceptar = (DPI) => {
-
-    aceptarAplicante(DPI)
-      .then(res => {
-        console.log(res)
-        alert("Aplicante Aceptado!")
-        const del = aplicantes.filter(aplicante => aplicante.DPI !== DPI)
-        setAplicantes(del)
-      })
-      .catch((err) => {
-        console.log(err)
-        alert("Ocurrio un error")
-      });
-    //const del = aplicantes.filter(usuario => NOMBRE !== usuario.NOMBRE)
   }
 
   const renderHeader = () => {
-    let headerElement = ['DPI', 'NOMBRE', 'CORREO', 'DIRECCION', 'TELEFONO', 'PUESTO', 'FECHA', 'CV', 'ACEPTAR', 'ELIMINAR']
+    let headerElement = ['DPI', 'NOMBRE', 'CORREO', 'DIRECCION', 'TELEFONO', 'PUESTO', 'ESTADO', 'VER EXPEDIENTE']
     return headerElement.map((key, index) => {
       return <th key={index}>{key.toUpperCase()}</th>
     })
   }
 
   const renderBody = () => {
-    return aplicantes.map(({ DPI, NOMBRES, CORREO, DIRECCION, TELEFONO, PUESTO, ESTADO }) => {
+    return aplicantes.map(({ DPI, NOMBRES, CORREO, DIRECCION, TELEFONO, PUESTO, ESTADO, DEPARTAMENTO }) => {
       return (
         <tr key={DPI}>
           <td>{DPI}</td>
@@ -102,20 +67,11 @@ function RevisorRevision() {
           <td>{TELEFONO}</td>
           <td>{PUESTO}</td>
           <td>{ESTADO}</td>
-          
 
           <td className='opration'>
-            <Link to={'/adminsistema/EditUser/' + DPI}>
-              <button class="btn btn-info">
-                CV
-              </button>
-            </Link>
-          </td>
-          <td className='opration'>
-            <Button className='button' variant="success" onClick={() => aceptar(DPI)}>Aceptar</Button>
-          </td>
-          <td className='opration'>
-            <Button className='button' variant="danger" onClick={() => deleteData(DPI)}>Descartar</Button>
+            <Link to={"/revisor/revision/verExp/"+revisor+"/"+DPI+"/"+DEPARTAMENTO+"/"+PUESTO}>
+              <Button variant="info">Ver Expediente</Button>
+              </Link>
           </td>
         </tr>
       )
@@ -152,12 +108,13 @@ function RevisorRevision() {
         <Container >
           <StyledLink to="/">201909103</StyledLink>
           <StyledLink to="/">Inicio</StyledLink>
-          <StyledLink to={"/revisor/aplicantes/" + departamento}>Aceptar/Rechazar Aplicantes</StyledLink>
-          <StyledLink to={"/revisor/revision"}>Revisión de Expediente</StyledLink>
+          <StyledLink to={"/revisor/aplicantes/" + revisor}>Aceptar/Rechazar Aplicantes</StyledLink>
+          <StyledLink to={"/revisor/revision/" + revisor}>Revisión de Expediente</StyledLink>
+          <StyledLink to={"/revisor/messenger/" + revisor}>CHAT</StyledLink>
         </Container>
       </div>
       <br />
-      <h1 style={{ textAlign: "center", color: "white" }}>Departamento: {departamento}</h1>
+      <h1 style={{ textAlign: "center", color: "white" }}>Revisor: {revisor}</h1>
       <br />
       <div style={{ textAlign: "center", color: "white" }}>
         Filtros:
@@ -172,7 +129,7 @@ function RevisorRevision() {
           onChange={(e) => setFilPuesto(e.target.value)}
         />
         <input style={{ marginLeft: "2%", marginBottom: "2%" }}
-          type="text" placeholder="Fecha"
+          type="text" placeholder="Estado"
           value={filEstado}
           onChange={(e) => setFilEstado(e.target.value)}
         />
@@ -195,7 +152,7 @@ function RevisorRevision() {
             borderRadius: "2%",
             color: "white"
           }}>
-            <h1 style={{ textAlign: "center" }}>Aplicantes por Aceptar o Rechazar</h1>
+            <h1 style={{ textAlign: "center" }}>Revision de Expedientes</h1>
             <table class="table table-sm table-hover" >
               <thead class="tblsimbolos">
                 <tr>{renderHeader()}</tr>
@@ -207,6 +164,7 @@ function RevisorRevision() {
           </form>
         </div>
       </div>
+
       <br /><br /><br /><br /><br />
       <br /><br /><br /><br /><br />
       <br /><br /><br /><br /><br />
