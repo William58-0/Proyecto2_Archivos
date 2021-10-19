@@ -33,7 +33,7 @@ function AplicanteLogin() {
           setRedirect(false)
           alert("Datos incorrectos")
         } else {
-          if (res.data[0].ESTADO == "contratado" || res.data[0].ESTADO == "aceptado") {
+          if (res.data[0].ESTADO == "contratado" || res.data[0].ESTADO == "aceptado" || res.data[0].ESTADO == "revisado") {
             setPrimer(res.data[0].PRIMERLOGIN)
             setDep(res.data[0].DEPARTAMENTO)
             setPuesto(res.data[0].PUESTO)

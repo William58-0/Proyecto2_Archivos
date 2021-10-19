@@ -34,15 +34,9 @@ import GuestForm from '../components/Guest/Formulario';
 import GuestLogin from '../components/CorreosGuest/GuestLogin';
 import GuestMessenger from '../components/CorreosGuest/GuestMessenger';
 
-
 import styled from 'styled-components';
 
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-
-import NavBar from '../components/NavBar';
-import Grafoo from '../components/cst';
-
-
 
 const Container = styled.div`
   margin: 0 auto;
@@ -181,11 +175,6 @@ class App extends Component {
                 component={GuestMessenger}
               />
 
-              <Route
-                path="/cst"
-                exact
-                component={Grafoo}
-              />
               <Redirect to="/" />
             </Switch>
           </Container>

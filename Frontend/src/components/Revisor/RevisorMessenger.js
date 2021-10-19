@@ -55,7 +55,7 @@ const GuestMessenger = () => {
     console.log(response.data)
     var nuevo = []
     for (let i = 0; i < response.data.length; i++) {
-      if (response.data[i].ESTADO == 'aceptado') {
+      if (response.data[i].ESTADO == 'aceptado' || response.data[i].ESTADO == 'revisado') {
         var nombre = response.data[i].NOMBRES.split(" ", 1)[0] + " " + response.data[i].APELLIDOS.split(" ", 1)[0]
         response.data[i].NOMBRES = nombre
         nuevo.push(response.data[i])
@@ -93,19 +93,9 @@ const GuestMessenger = () => {
   }
 
   const selecConv = (dpi, name) => {
-    //alert(dpi)
     setReceptName(name)
     setReceptDPI(dpi)
     setRedirect(true)
-    /*
-    var del = []
-    del = mensajes.filter(mensaje => mensaje.RECEPTOR == dpi || mensaje.EMISOR == dpi)
-    if (del.length == 0) {
-      del.push({ EMISOR: dpi, TEXTO: "No hay mensajes para mostrar", RECEPTOR: perfil })
-    }
-    setMensajes(del)
-    */
-
   }
 
   const imageClick = async () => {
@@ -138,7 +128,7 @@ const GuestMessenger = () => {
           {renderBody()}
         </tbody>
       </table>
-      <MDBTable scrollY borderless maxHeight="100%" style={{ backgroundColor: "white", marginLeft: "2%", width: "93%" }}>
+      <MDBTable scrollY borderless maxHeight="700px" style={{ backgroundColor: "white", marginLeft: "2%", width: "93%" }}>
         <Container >
           <div style={{ marginLeft: "2%" }}>
             <img style={{ borderRadius: '50%' }}

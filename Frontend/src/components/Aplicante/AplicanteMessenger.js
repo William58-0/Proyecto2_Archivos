@@ -41,9 +41,6 @@ const AplicanteMessenger = () => {
   const getData = async () => {
       const response = await getMensajes(perfil)
       var del = response.data
-      console.log("mensajes")
-      console.log(del)
-      console.log(receptName)
       //const del=response.data
       del = del.filter(mensaje => mensaje.RECEPTOR == receptName || mensaje.EMISOR == receptName)
       if(del.length==0){
@@ -59,8 +56,6 @@ const AplicanteMessenger = () => {
 
   const getRevisorA = async () => {
     const response = await getRevisorAsignado(perfil)
-    console.log("reeevisorr")
-    console.log(response.data)
     
     if(response.data.length>0){
         setReceptName(response.data[0].REVISOR)
@@ -101,14 +96,14 @@ const AplicanteMessenger = () => {
       <br />
       <h1 style={{ textAlign: "center", color: "white" }}>Live Chat</h1>
       <br />
-      <MDBTable scrollY borderless maxHeight="100%" style={{ backgroundColor: "white", marginLeft: "2%", width: "93%" }}>
+      <MDBTable scrollY borderless maxHeight="700px" style={{ backgroundColor: "white", marginLeft: "2%", width: "93%" }}>
         <Contenedor >
           <div style={{ marginLeft: "2%" }}>
             <img style={{ borderRadius: '50%' }}
               src={'https://www.madd.org/wp-content/uploads/2019/02/blank-profile-picture-973460_640.png'}
               width={50}
             />
-            {receptName}
+            Revisor: {receptName}
           </div>
         </Contenedor>
         <MDBTableBody >

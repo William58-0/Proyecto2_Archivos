@@ -115,17 +115,12 @@ router.post("/getMensajes", async function (req, res, next) {
 });
 
 // INSERT INTO MENSAJE VALUES ('william580',12, '2797652900101', 'stas');
-
 router.post("/sendMessage", async function (req, res, next) {
   const { emisor, texto, receptor } = req.body;
   var actual = Date.now()
-  console.log(actual)
-
   let responseReq = await service.connect(
     `INSERT INTO MENSAJE VALUES ('${emisor}',${actual}, '${receptor}', '${texto}')`
   );
-  console.log(responseReq)
-
   if (responseReq.status == 400) {
     res.status(400).json({ message: responseReq.message });
   } else {
@@ -151,10 +146,7 @@ const uploadImage = multer({
 router.post('/imageupload', async (req, res) => {
   try {
     let upload = multer({ storage: storage }).single('avatar');
-
     upload(req, res, async function (err) {
-      
-
       if (!req.file) {
         return res.send('Seleccionar archivo');
       }
@@ -167,10 +159,10 @@ router.post('/imageupload', async (req, res) => {
         const classifiedsadd = {
           name: req.file.filename
         };
-        var orgname=classifiedsadd.name
-        var formato=orgname.split(".",2)[1]
-        var name=(orgname.split("_",2)[1]).split(".",2)[0]
-        var aplicante=orgname.split("_",2)[0]
+        var orgname = classifiedsadd.name
+        var formato = orgname.split(".", 2)[1]
+        var name = (orgname.split("_", 2)[1]).split(".", 2)[0]
+        var aplicante = orgname.split("_", 2)[0]
         console.log(orgname)
         console.log(formato)
         console.log(name)
@@ -179,16 +171,11 @@ router.post('/imageupload', async (req, res) => {
         let respDocIn1 = await service.connect(
           `SELECT * FROM DOCUMENTO WHERE Nombre='${name}' AND Formato='${formato}' AND Aplicante='${aplicante}'`
         );
-
-        console.log("lo primero")
-        console.log(respDocIn1)
         // si no existe inserta uno nuevo
-        if(respDocIn1.data.length==0){
+        if (respDocIn1.data.length == 0) {
           let respDocIn = await service.connect(
             `INSERT INTO DOCUMENTO VALUES('${name}','${formato}', 'pendiente', '${aplicante}')`
           );
-          console.log(respDocIn)
-        
           if (respDocIn.status == 400) {
             res.status(400).json({ message: respDocIn.message });
           } else {
@@ -198,12 +185,10 @@ router.post('/imageupload', async (req, res) => {
           }
         }
         // si ya existe solo le actualiza el estado a pendiente
-        else{
+        else {
           let respDocIn = await service.connect(
             `UPDATE DOCUMENTO SET Estado='pendiente' WHERE Nombre='${name}' AND Formato='${formato}' AND Aplicante='${aplicante}'`
           );
-          console.log(respDocIn)
-        
           if (respDocIn.status == 400) {
             res.status(400).json({ message: respDocIn.message });
           } else {
@@ -213,33 +198,58 @@ router.post('/imageupload', async (req, res) => {
           }
         }
       }
-
     });
   } catch (err) { console.log(err) }
 });
 
-function GuardarArchivo(name, ){
-
-}
-
 router.post("/abrirDocumento", async function (req, res, next) {
-  const { dpi, documento } = req.body;
-  console.log(dpi)
-  console.log(documento)
+  const { dpi, documento, formato } = req.body;
+  var archivo = dpi + '_' + documento + '.' + formato
+  // verificar si existe el archivo
+  const fs = require('fs')
+  const path = './Documentos/' + archivo
 
-  const fs = require('fs');
-
-  // destination.txt will be created or overwritten by default.
-  fs.copyFile('./Documentos/file.pdf', './../Frontend/src/Documentos/file.pdf', (err) => {
-    if (err) {res.status(400).json(err);}
-    else {
-      res
-        .status(200)
-        .json("Se cargo archivo");
+  var existe = false
+  try {
+    if (fs.existsSync(path)) {
+      //file exist
+      existe = true
     }
-    console.log('archivo copiado');
-  });
+  } catch (err) {
+    console.error(err)
+    existe = false
+  }
 
+  if (existe) {
+    //const fs = require('fs');
+    // destination.txt will be created or overwritten by default.
+    fs.copyFile(path, './../Frontend/src/Documentos/file.'+formato, (err) => {
+      if (err) { res.status(400).json(err); }
+      else {
+        res
+          .status(200)
+          .json("Se cargo archivo");
+      }
+      console.log('archivo copiado');
+    });
+  }else{
+    res.status(400).json("no existe el archivo");
+  }
+});
+
+router.post("/getDocs", async function (req, res, next) {
+  const { dpi } = req.body;
+  let respGetDocs = await service.connect(
+    `SELECT * FROM DOCUMENTO WHERE Aplicante='${dpi}'`
+  );
+  console.log(respGetDocs)
+  if (respGetDocs.status == 400) {
+    res.status(400).json({ message: respGetDocs.message });
+  } else {
+    res
+      .status(200)
+      .json(respGetDocs.data);
+  }
 });
 
 

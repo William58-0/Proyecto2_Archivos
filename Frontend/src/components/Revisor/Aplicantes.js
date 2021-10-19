@@ -57,7 +57,7 @@ function RevisorAplicantes() {
     for (let i = 0; i < aplicantes.length; i++) {
       if (aplicantes[i].NOMBRE == NOMBRE) {
         var obj = aplicantes[i]
-        obj.FECHAFIN = "ahorita"
+        obj.FECHAFIN = "hace un momento"
         nuevo.push(obj)
       } else {
         nuevo.push(aplicantes[i])
@@ -88,7 +88,7 @@ function RevisorAplicantes() {
   }
 
   const abrirCV = (DPI) => {
-    abrirDocumento(DPI, "CV")
+    abrirDocumento(DPI, "CV","pdf")
       .then(res => {
         alert("Archivo Cargado")
       })

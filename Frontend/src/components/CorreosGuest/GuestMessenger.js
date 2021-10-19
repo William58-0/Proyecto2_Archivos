@@ -60,7 +60,7 @@ const GuestMessenger = () => {
       <br />
       <h1 style={{ textAlign: "center", color: "white" }}>Mensajes</h1>
       <br />
-      <MDBTable scrollY borderless maxHeight="100%" style={{ backgroundColor: "white", marginLeft: "2%", width: "93%" }}>
+      <MDBTable scrollY borderless maxHeight="700px" style={{ backgroundColor: "white", marginLeft: "2%", width: "93%" }}>
         <NavBarChat />
         <MDBTableBody >
           {mensajes.map(mensaje => (
