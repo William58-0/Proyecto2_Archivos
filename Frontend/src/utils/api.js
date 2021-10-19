@@ -78,9 +78,9 @@ export function getEmpleadosC(dept){
 
 // ------------------------------------------------------------------------------------------ Revisor
 // Obtiene los aplicantes de su departamento
-export function getAplicantesR(dept){
-  const departamento={dept}
-  return axios.post('http://localhost:9000/Revisor/getAplicantesR', departamento)
+export function getAplicantesR(rev){
+  const info={rev}
+  return axios.post('http://localhost:9000/Revisor/getAplicantesR', info)
 }
 
 // Obtiene los empleados de su departamento
@@ -103,9 +103,27 @@ export function LoginAplicante(dpi, contrasenia) {
 }
 
 // Obtiene el listado de requisitos de un puesto
+export function getDatosAplicante(dpi) {
+  const info = { dpi }
+  return axios.post('http://localhost:9000/Aplicante/getDatosAplicante', info)
+}
+
+// Obtiene el listado de requisitos de un puesto
 export function getRequisitos(departamento, puesto) {
   const info = { departamento, puesto }
   return axios.post('http://localhost:9000/getRequisitos', info)
+}
+
+// Obtiene el listado de requisitos de un puesto
+export function actualizarDatos(dpi, nombres, apellidos, correo, direccion, telefono) {
+  const info = { dpi, nombres, apellidos, correo, direccion, telefono }
+  return axios.post('http://localhost:9000/Aplicante/actualizarDatos', info)
+}
+
+// Obtiene el listado de requisitos de un puesto
+export function getRevisorAsignado(dpi) {
+  const info = { dpi }
+  return axios.post('http://localhost:9000/Aplicante/getRevisorAsignado', info)
 }
 
 // ------------------------------------------------------------------------------------------ Guest

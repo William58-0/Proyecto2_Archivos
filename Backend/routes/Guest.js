@@ -13,12 +13,13 @@ router.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 // inserta un nuevo aplicante cuando el que era guest llena sus datos
 router.post("/insertAplicante", async function (req, res, next) {
   const { dpi, nombres, apellidos, correo, direccion, telefono, depart, puesto, revisor } = req.body
+  let now= new Date();
   const fechainicio = now.getDay() + "/" + now.getMonth() + "/" + now.getFullYear()
   // INSERT INTO APLICANTE_EMPLEADO VALUES
-  // (2797652900101,'william alejandro', 'borrayo alarcon', '-', 'wiliamborryo@gmail.com', 'casa', '1234', 'pendiente', 'hoy', 'maniana','reev1', 'uno', 'unopuesto' );
+  // (2797652900101,'william alejandro', 'borrayo alarcon', '-', 'wiliamborryo@gmail.com', 'casa', '1234', 'pendiente', 'hoy', 'maniana',1,'reev1', 'uno', 'unopuesto' );
   let respInsApl = await service.connect(
     `INSERT INTO APLICANTE_EMPLEADO VALUES
-    (${dpi},'${nombres}','${apellidos}','-','${correo}','${direccion}','${telefono}','pendiente','${fechainicio}','-','${revisor}','${depart}','${puesto}')`
+    (${dpi},'${nombres}','${apellidos}','-','${correo}','${direccion}','${telefono}','pendiente','${fechainicio}','-',1,'${revisor}','${depart}','${puesto}')`
   );
   console.log(respInsApl)
   if (respInsApl.status == 400) {

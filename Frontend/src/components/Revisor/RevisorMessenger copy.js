@@ -4,46 +4,8 @@ import { MDBTable, MDBTableBody, MDBTableEditable } from 'mdbreact';
 import styled from 'styled-components';
 import { Link, useParams } from 'react-router-dom';
 import { getMensajes } from '../../utils/api';
-import { Button } from "react-bootstrap";
-import ImageButton from 'react-image-button';
+import { sendMessage } from '../../utils/api';
 //import NavBarRevisor from './NavBarRevisor';
-
-var msj =
-  [
-    {
-      autor: "yo",
-      texto: "hola"
-    },
-    {
-      autor: "otro",
-      texto: "hola"
-    },
-    {
-      autor: "yo",
-      texto: "hola"
-    },
-    {
-      autor: "otro",
-      texto: "hola"
-    },
-    {
-      autor: "yo",
-      texto: "hola"
-    },
-    {
-      autor: "otro",
-      texto: "hola"
-    },
-  ]
-
-const users = [
-  { nombre: "william" },
-  { nombre: "Cindy" },
-  { nombre: "Roxana" },
-  { nombre: "Estrada" },
-  { nombre: "Hernández" }
-]
-
 
 const Container = styled.div`
   width: 100%;
@@ -55,7 +17,7 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const NavBarRevisor = () => {
+const NavBarChat = () => {
   return (
     <div>
       <Container >
@@ -70,32 +32,33 @@ const NavBarRevisor = () => {
   );
 };
 
-function GuestMessenger() {
-  const [usuarios, setUsuarios] = useState(users)
-  const [mensajes, setMensajes] = useState(msj)
-  const [perfil, setPerfil] = useState(useParams().perfil)
+const GuestMessenger = () => {
+  const [usuarios, setUsuarios] = useState([])
+  const [mensajes, setMensajes] = useState([]);
+  const [nuevomsj, setNuevoMsj] = useState([]);
 
   useEffect(() => {
-    //getData()
+    getData()
   }, [])
 
   const getData = async () => {
-    const response = await getMensajes(perfil)
-    setUsuarios(response.data)
+    const response = await getMensajes('william580')
+    console.log(response.data)
+    setUsuarios(response.data.users)
+    setMensajes(response.data.mensajes)
+    //setUsuarios(response.data)
   }
 
   const abrirMensajes = (nombre) => {
     alert(nombre)
   }
 
-  function imageClick() {
-    //alert('Click');
-    msj.push({
-      autor: "yo",
-      texto: "hola"
-    })
-    msj = msj
-    setMensajes(msj)
+  const imageClick = async () => {
+    alert(nuevomsj);
+    sendMessage('william580', nuevomsj, 2797652900101)
+
+    window.location.reload();
+
   }
 
   const renderBody = () => {
@@ -115,21 +78,10 @@ function GuestMessenger() {
     })
   }
 
-  const renderBody1 = () => {
-    return mensajes.map(({ autor, texto }) => {
-      return (
-        <tr key={autor}
-        style={{ textAlign: autor !== "yo" ? 'left' : 'right' }}>
-        <td style={{ paddingLeft: "5%" }} >{texto}</td>
-      </tr>
-      )
-    })
-  }
-
   return (
     <>
       <br />
-      <Link to="/adminsistema/adminusershome/adminusers">
+      <Link to="/guestLogin">
         <button style={{ marginLeft: "2%" }} class="btn btn-success">
           Regresar
         </button>
@@ -142,13 +94,21 @@ function GuestMessenger() {
           {renderBody()}
         </tbody>
       </table>
-      <table maxHeight="100%" style={{ backgroundColor: "white", marginLeft: "2%", width: "60%" }} >
-        <tbody>
-          {renderBody1()}
-        </tbody>
+      <MDBTable scrollY borderless maxHeight="100%" style={{ backgroundColor: "white", marginLeft: "2%", width: "93%" }}>
+        <NavBarChat />
+        <MDBTableBody >
+
+          {mensajes.map(mensaje => (
+            <tr key={mensaje.EMISOR}
+              style={{ textAlign: mensaje.EMISOR !== "william580" ? 'left' : 'right' }}>
+              <td style={{ paddingLeft: "5%" }} >{mensaje.TEXTO}</td>
+            </tr>
+          ))}
+
+        </MDBTableBody>
         <div>
           <Container >
-            <input type="text" placeholder="Escribe algo"
+            <input type="text" placeholder="Escribe algo" value={nuevomsj} onChange={(e) => setNuevoMsj(e.target.value)}
               style={{ backgroundColor: "white", marginLeft: "2%", width: "75%" }} />
             <img style={{ borderRadius: '50%', marginLeft: "50%" }}
               src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQCm9en7ZCaKhDe2QxYoMR_sxBSqO7JTeCmbg&usqp=CAU'
@@ -157,7 +117,7 @@ function GuestMessenger() {
             />
           </Container>
         </div>
-      </table>
+      </MDBTable>
       <br /><br />
       <br /><br />
       <br /><br />

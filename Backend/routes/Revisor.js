@@ -52,11 +52,11 @@ router.post("/aceptarAplicante", async function (req, res, next) {
 
 // Obtiene los aplicantes de su departamento
 router.post("/getAplicantesR", async function (req, res, next) {
-  const {dept} =req.body
+  const {rev} =req.body
   console.log(req.body)
   
   let respGetApl = await service.connect(
-    `SELECT * FROM APLICANTE_EMPLEADO WHERE Departamento='${dept}' AND Estado='pendiente'`
+    `SELECT * FROM APLICANTE_EMPLEADO WHERE Revisor='${rev}'`
   );
   console.log(respGetApl)
   if (respGetApl.status == 400) {

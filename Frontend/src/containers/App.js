@@ -18,11 +18,13 @@ import RevisorLogin from '../components/Revisor/RevisorLogin';
 import RevisorAplicantes from '../components/Revisor/Aplicantes';
 import RevisorRevision from '../components/Revisor/Revision';
 import RevisorVerExp from '../components/Revisor/VerExpediente';
+import RevisorMessenger from '../components/Revisor/RevisorMessenger';
 
 // Aplicante
 import AplicanteLogin from '../components/Aplicante/AplicanteLogin';
-import AplicanteCorreccion from '../components/Aplicante/Correccion';
+import AplicanteVerificacion from '../components/Aplicante/Verificacion';
 import AplicanteRevision from '../components/Aplicante/Revision';
+import AplicanteMessenger from '../components/Aplicante/AplicanteMessenger';
 
 // Guest
 import GuestHome from '../components/Guest/GuestHome';
@@ -111,12 +113,12 @@ class App extends Component {
                 component={RevisorLogin}
               />
               <Route
-                path="/revisor/aplicantes/:departamento"
+                path="/revisor/aplicantes/:revisor"
                 exact
                 component={RevisorAplicantes}
               />
               <Route
-                path="/revisor/revision"
+                path="/revisor/revision/:revisor"
                 exact
                 component={RevisorRevision}
               />
@@ -125,6 +127,16 @@ class App extends Component {
                 exact
                 component={RevisorVerExp}
               />
+              <Route
+                path="/revisor/messenger/:revisor"
+                exact
+                component={RevisorMessenger}
+              />
+              <Route
+                path="/revisor/messenger/:revisor/:receptor"
+                exact
+                component={RevisorMessenger}
+              />
 
               <Route
                 path="/aplicante"
@@ -132,14 +144,19 @@ class App extends Component {
                 component={AplicanteLogin}
               />
               <Route
-                path="/aplicante/correccion"
+                path="/aplicante/verificacion/:dpi/:departamento/:puesto"
                 exact
-                component={AplicanteCorreccion}
+                component={AplicanteVerificacion}
               />
               <Route
-                path="/aplicante/revision"
+                path="/aplicante/revision/:dpi/:departamento/:puesto"
                 exact
                 component={AplicanteRevision}
+              />
+              <Route
+                path="/aplicante/messenger/:dpi/:departamento/:puesto/:revisor"
+                exact
+                component={AplicanteMessenger}
               />
 
               <Route

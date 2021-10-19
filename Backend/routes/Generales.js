@@ -99,28 +99,17 @@ router.post("/getRequisitos", async function (req, res, next) {
 
 router.post("/getMensajes", async function (req, res, next) {
   const { perfil } = req.body;
-  let responseReq = await service.connect(
+  let resGetMsj = await service.connect(
     `SELECT * FROM MENSAJE WHERE Emisor ='${perfil}' OR Receptor='${perfil}' ORDER BY Orden ASC`
   );
-  console.log(responseReq)
+  console.log(resGetMsj)
 
-  if (responseReq.status == 400) {
-    res.status(400).json({ message: responseReq.message });
+  if (resGetMsj.status == 400) {
+    res.status(400).json({ message: resGetMsj.message });
   } else {
-    var escritos=[]
-    var usuarios = []
-    for (let i = 0; i < responseReq.data.length; i++) {
-      if (!escritos.includes(responseReq.data[i].EMISOR)) {
-        usuarios.push({ nombre: responseReq.data[i].EMISOR })
-        escritos.push(responseReq.data[i].EMISOR)
-      } if (!escritos.includes(responseReq.data[i].RECEPTOR)) {
-        usuarios.push({ nombre: responseReq.data[i].RECEPTOR })
-        escritos.push(responseReq.data[i].RECEPTOR)
-      }
-    }
     res
       .status(200)
-      .json({ mensajes: responseReq.data, users: usuarios });
+      .json(resGetMsj.data);
   }
 
 });

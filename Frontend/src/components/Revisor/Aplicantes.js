@@ -28,6 +28,7 @@ function RevisorAplicantes() {
   console.log(useParams().departamento)
   const [aplicantes, setAplicantes] = useState([])
   const [departamento, setDep] = useState(useParams().departamento)
+  const [revisor, serRev] = useState(useParams().revisor)
   const [filName, setFilName] = useState("");
   const [filPuesto, setFilPuesto] = useState("");
   const [filFecha, setFilFecha] = useState("");
@@ -38,14 +39,18 @@ function RevisorAplicantes() {
   }, [])
 
   const getData = async () => {
-    const response = await getAplicantesR(departamento)
+    const response = await getAplicantesR(revisor)
     console.log(response)
+    var nuevo=[]
     for (let i = 0; i < response.data.length; i++) {
-      //var splitted = str.split(" ", 3); 
-      var nombre = response.data[i].NOMBRES.split(" ", 1)[0] + " " + response.data[i].APELLIDOS.split(" ", 1)[0]
-      response.data[i].NOMBRES = nombre
+      if(response.data[i].ESTADO=='pendiente'){
+        var nombre = response.data[i].NOMBRES.split(" ", 1)[0] + " " + response.data[i].APELLIDOS.split(" ", 1)[0]
+        response.data[i].NOMBRES = nombre
+        nuevo.push(response.data[i])
+      }
     }
-    setAplicantes(response.data)
+
+    setAplicantes(nuevo)
   }
 
   const deleteData = (NOMBRE) => {
@@ -151,8 +156,10 @@ function RevisorAplicantes() {
         <Container >
           <StyledLink to="/">201909103</StyledLink>
           <StyledLink to="/">Inicio</StyledLink>
-          <StyledLink to={"/revisor/aplicantes/" + departamento}>Aceptar/Rechazar Aplicantes</StyledLink>
-          <StyledLink to={"/revisor/revision"}>Revisión de Expediente</StyledLink>
+          <StyledLink to={"/revisor/aplicantes/"+revisor}>Aceptar/Rechazar Aplicantes</StyledLink>
+          <StyledLink to={"/revisor/revision/"+revisor}>Revisión de Expediente</StyledLink>
+          <StyledLink to={"/revisor/messenger/"+revisor}>CHAT</StyledLink>
+
         </Container>
       </div>
       <br />

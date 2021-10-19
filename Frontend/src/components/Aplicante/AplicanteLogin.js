@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom';
-import { Redirect } from 'react-router';
+import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button } from "react-bootstrap";
 import { LoginAplicante } from '../../utils/api';
@@ -9,24 +8,24 @@ var arreglo = []
 
 function AplicanteLogin() {
   const [dpi, setDPI] = useState("")
-  const [departamento, setDepartamento] = useState("");
+  const [departamento, setDep] = useState("")
+  const [puesto, setPuesto] = useState("")
   const [password, setPassword] = useState("");
   const [primer, setPrimer] = useState(1);
   const [redirect, setRedirect] = useState(false);
 
   const renderRedirect = () => {
     if (redirect) {
-      if (primer==1) {
-        return <Redirect to={'/aplicante/correccion' + dpi} />
-      }else{
-        
+      if (primer == 1) {
+        return <Redirect to={'/aplicante/verificacion/' + dpi + "/" + departamento + "/" + puesto} />
+      } else {
+        return <Redirect to={'/aplicante/revision/' + dpi + "/" + departamento + "/" + puesto} />
       }
     }
   }
 
   const IniciarSesion = () => {
-    console.log(dpi)
-    console.log(password)
+    console.log("hola")
     LoginAplicante(dpi, password)
       .then(res => {
         console.log(res)
@@ -34,13 +33,15 @@ function AplicanteLogin() {
           setRedirect(false)
           alert("Datos incorrectos")
         } else {
-          if (res.data[0].TIPO == "Revisor" && res.data[0].ESTADO == "Activo") {
-            setDepartamento(res.data[0].DEPARTAMENTO)
+          if (res.data[0].ESTADO == "contratado" || res.data[0].ESTADO == "aceptado") {
+            setPrimer(res.data[0].PRIMERLOGIN)
+            setDep(res.data[0].DEPARTAMENTO)
+            setPuesto(res.data[0].PUESTO)
             setRedirect(true)
             alert("Bienvenido")
           } else {
             setRedirect(false)
-            alert("No es un revisor activo")
+            alert("No tiene permisos")
           }
         }
       })
@@ -59,9 +60,9 @@ function AplicanteLogin() {
       <br /><br />
       <br /><br />
       <form style={{ textAlign: "center", alignItems: "center", color: "white" }}>
-        <h1 style={{ color: "white" }}>Iniciar Sesión como Revisor de Expedientes</h1>
+        <h1 style={{ color: "white" }}>Iniciar Sesión como Aplicante</h1>
         <label>
-          Nombre de Usuario: <input style={{ marginLeft: "2%", marginBottom: "2%" }}
+          DPI/CUI: <input style={{ marginLeft: "2%", marginBottom: "2%" }}
             type="text" value={dpi} onChange={(e) => setDPI(e.target.value)} />
         </label><br />
         <label>

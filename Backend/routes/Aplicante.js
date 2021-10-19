@@ -14,14 +14,67 @@ router.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 router.post("/LoginAplicante", async function (req, res, next) {
   const { dpi, contrasenia } = req.body
   let responseLogin = await service.connect(
-    `SELECT * FROM APLICANTE WHERE DPI = ${dpi} AND Contrasenia='${contrasenia}'`
+    `SELECT * FROM APLICANTE_EMPLEADO WHERE DPI = ${dpi} AND Contrasenia='${contrasenia}'`
   );
+  console.log(responseLogin)
+
   if (responseLogin.status == 400) {
     res.status(400).json({ message: responseLogin.message });
   } else {
     res
       .status(200)
       .json(responseLogin.data);
+  }
+
+});
+
+// Para que el aplicante ingrese a la plataforma
+router.post("/getDatosAplicante", async function (req, res, next) {
+  const { dpi } = req.body
+  let respGetData = await service.connect(
+    `SELECT * FROM APLICANTE_EMPLEADO WHERE DPI = ${dpi}`
+  );
+  console.log(respGetData)
+
+  if (respGetData.status == 400) {
+    res.status(400).json({ message: respGetData.message });
+  } else {
+    res
+      .status(200)
+      .json(respGetData.data);
+  }
+  
+});
+
+// Para que el aplicante ingrese a la plataforma
+router.post("/actualizarDatos", async function (req, res, next) {
+  const { dpi, nombres, apellidos, correo, direccion, telefono } = req.body
+  let respActData = await service.connect(
+    `UPDATE APLICANTE_EMPLEADO SET Nombres='${nombres}', Apellidos='${apellidos}', Correo='${correo}', Direccion='${direccion}', Telefono='${telefono}', PrimerLogin=0 WHERE DPI=${dpi}`
+  );
+  console.log(respActData)
+  if (respActData.status == 400) {
+    res.status(400).json({ message: respActData.message });
+  } else {
+    res
+      .status(200)
+      .json(respActData.data);
+  }
+});
+
+// Para obtener el revisor asignado
+router.post("/getRevisorAsignado", async function (req, res, next) {
+  const { dpi } = req.body
+  let respGetRevAsig = await service.connect(
+    `SELECT Revisor FROM APLICANTE_EMPLEADO WHERE DPI = '${dpi}'`
+  );
+  console.log(respGetRevAsig)
+  if (respGetRevAsig.status == 400) {
+    res.status(400).json({ message: respGetRevAsig.message });
+  } else {
+    res
+      .status(200)
+      .json(respGetRevAsig.data);
   }
 });
 
