@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
 import { MDBTable, MDBTableBody, MDBTableEditable } from 'mdbreact';
 import styled from 'styled-components';
 import { Link, useParams, Redirect } from 'react-router-dom';
 import { getMensajes, getRevisorAsignado, sendMessage } from '../../utils/api';
-import { Container, Row, Col } from 'reactstrap';
 //import NavBarRevisor from './NavBarRevisor';
 
 const Contenedor = styled.div`
@@ -36,11 +34,13 @@ const AplicanteMessenger = () => {
 
   useEffect(() => {
     getData()
+    getRevisorA()
   }, [])
 
   const getData = async () => {
       const response = await getMensajes(perfil)
       var del = response.data
+      console.log(del)
       //const del=response.data
       del = del.filter(mensaje => mensaje.RECEPTOR == receptName || mensaje.EMISOR == receptName)
       if(del.length==0){
@@ -50,13 +50,8 @@ const AplicanteMessenger = () => {
       }
   }
 
-  useEffect(() => {
-    getRevisorA()
-  }, "")
-
   const getRevisorA = async () => {
     const response = await getRevisorAsignado(perfil)
-    
     if(response.data.length>0){
         setReceptName(response.data[0].REVISOR)
     }else{
@@ -84,15 +79,10 @@ const AplicanteMessenger = () => {
         <StyledLink to="/">201909103</StyledLink>
         <StyledLink to="/">Inicio</StyledLink>
         <StyledLink to={"/aplicante/revision/"+perfil+"/"+departamento+"/"+puesto}>Revision Expediente</StyledLink>
-        <StyledLink to={"/aplicante/verificacion/"+perfil+"/"+departamento+"/"+puesto}>Correccion Expediente</StyledLink>
+        <StyledLink to={"/aplicante/correccion/"+perfil+"/"+departamento+"/"+puesto}>Correccion Expediente</StyledLink>
         <StyledLink to={"/aplicante/messenger/"+perfil+"/"+departamento+"/"+puesto}>CHAT</StyledLink>
       </Contenedor>
       <br />
-      <Link to={'/revisor/aplicantes/'+perfil}>
-        <button style={{ marginLeft: "2%" }} class="btn btn-success">
-          Regresar
-        </button>
-      </Link>
       <br />
       <h1 style={{ textAlign: "center", color: "white" }}>Live Chat</h1>
       <br />

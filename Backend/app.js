@@ -7,8 +7,6 @@ var corsOptions = { origin: true, optionsSuccessStatus: 200 };
 const cors = require("cors");
 
 var Generales = require("./routes/Generales");
-var usuarios = require("./routes/usuarios");
-var peliculas = require("./routes/peliculas");
 var AdminSistema = require("./routes/AdminSistema");
 var CoordDep = require("./routes/CoordDep");
 var Aplicante = require("./routes/Aplicante");
@@ -18,8 +16,6 @@ var CorreoGuest = require("./routes/CorreoGuest");
 
 app.use(cors(corsOptions));
 app.use("", Generales);
-app.use("/usuarios", usuarios);
-app.use("/peliculas", peliculas);
 app.use("/AdminSistema", AdminSistema);
 app.use("/CoordDep", CoordDep);
 app.use("/Aplicante", Aplicante);

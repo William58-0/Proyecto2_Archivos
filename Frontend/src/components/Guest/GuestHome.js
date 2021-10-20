@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getPuestos } from '../../utils/api';
+import { getPuestos, CalifPuesto } from '../../utils/api';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Link } from 'react-router-dom';
@@ -82,6 +82,23 @@ const GuestHome = ({ deviceType }) => {
     setPuestos(response.data)
   }
 
+  const Calificar = async (puesto, departamento) => {
+    if(calificacion>0 && calificacion<6){
+      CalifPuesto(puesto, departamento, calificacion)
+      .then(res => {
+          alert("Calificacion Agregada");
+          window.location.reload();
+      })
+      .catch((err) => {
+      console.log(err) 
+      alert("Algo paso :(")
+      });
+    }else{
+      alert("Calificacion no valida")
+    }
+    
+  }
+
   return (
     <div >
       <br />
@@ -138,7 +155,6 @@ const GuestHome = ({ deviceType }) => {
                 <div class="card-body d-flex justify-content-between align-items-center" style={{textAlign:"left"}}>
                   Departamento: {puesto.DEPARTAMENTO} <br />
                   Salario: {puesto.SALARIO} <br />
-                  Calificaciones: {puesto.CALIFICACIONES} <br />
                   Puntaje Promedio: {puesto.CALIFPROMEDIO} <br />
                 </div>
 
@@ -149,7 +165,7 @@ const GuestHome = ({ deviceType }) => {
                     </button>
                   </Link>
 
-                  <button class="btn btn-success" onClick={() => { alert("calificacion agregada") }}>
+                  <button class="btn btn-success" onClick={() => { Calificar(puesto.NOMBRE, puesto.DEPARTAMENTO) }}>
                     Calificar
                   </button>
                 </div>
@@ -174,6 +190,7 @@ const GuestHome = ({ deviceType }) => {
         </div>
 
       </div>
+      <br />
       <br />
       <br />
       <br />

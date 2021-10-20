@@ -4,7 +4,6 @@ var router = express.Router();
 const path = require('path');
 const multer = require('multer');
 
-
 //const service = require("./connection.js");
 const service = require("./connection.js");
 const cors = require("cors");
@@ -96,7 +95,6 @@ router.post("/getRequisitos", async function (req, res, next) {
   }
 });
 
-
 router.post("/getMensajes", async function (req, res, next) {
   const { perfil } = req.body;
   let resGetMsj = await service.connect(
@@ -176,6 +174,8 @@ router.post('/imageupload', async (req, res) => {
           let respDocIn = await service.connect(
             `INSERT INTO DOCUMENTO VALUES('${name}','${formato}', 'pendiente', '${aplicante}')`
           );
+          console.log(respDocIn1)
+          console.log(respDocIn)
           if (respDocIn.status == 400) {
             res.status(400).json({ message: respDocIn.message });
           } else {
@@ -189,6 +189,8 @@ router.post('/imageupload', async (req, res) => {
           let respDocIn = await service.connect(
             `UPDATE DOCUMENTO SET Estado='pendiente' WHERE Nombre='${name}' AND Formato='${formato}' AND Aplicante='${aplicante}'`
           );
+          console.log(respDocIn1)
+          console.log(respDocIn)
           if (respDocIn.status == 400) {
             res.status(400).json({ message: respDocIn.message });
           } else {

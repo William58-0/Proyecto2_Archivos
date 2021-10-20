@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { MDBTable, MDBTableBody, MDBTableEditable } from 'mdbreact';
+import { MDBTable, MDBTableBody } from 'mdbreact';
 import styled from 'styled-components';
 import { Link, useParams } from 'react-router-dom';
 import { getMensajes } from '../../utils/api';
-import { sendMessage } from '../../utils/api';
 //import NavBarRevisor from './NavBarRevisor';
 
 const Container = styled.div`
@@ -33,10 +31,8 @@ const NavBarChat = () => {
 };
 
 const GuestMessenger = () => {
-  const [usuarios, setUsuarios] = useState([])
   const [mensajes, setMensajes] = useState([]);
-  const [nuevomsj, setNuevoMsj] = useState([]);
-  const [perfil, serPerfil] = useState(useParams().dpi);
+  const [perfil, setPerfil] = useState(useParams().dpi);
 
   useEffect(() => {
     getData()
@@ -44,9 +40,9 @@ const GuestMessenger = () => {
 
   const getData = async () => {
     const response = await getMensajes(perfil)
-    console.log(response.data)
-    setUsuarios(response.data.users)
-    setMensajes(response.data.mensajes)
+    var del = response.data.filter(mensaje => mensaje.RECEPTOR === perfil)
+
+    setMensajes(del)
   }
 
   return (
@@ -58,7 +54,7 @@ const GuestMessenger = () => {
         </button>
       </Link>
       <br />
-      <h1 style={{ textAlign: "center", color: "white" }}>Mensajes</h1>
+      <h1 style={{ textAlign: "center", color: "white" }}>Bandeja de Entrada - {perfil}</h1>
       <br />
       <MDBTable scrollY borderless maxHeight="700px" style={{ backgroundColor: "white", marginLeft: "2%", width: "93%" }}>
         <NavBarChat />

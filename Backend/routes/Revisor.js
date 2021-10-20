@@ -33,8 +33,6 @@ router.post("/aceptarAplicante", async function (req, res, next) {
   let respAcetpApl = await service.connect(
     `UPDATE APLICANTE_EMPLEADO SET Estado='aceptado', Contrasenia='${actual}' WHERE DPI=${dpi}`
   );
-  //console.log(respAcetpApl)
-
   // Se le envia un mensaje al aplicante con las creedenciales
   console.log(actual)
   let responseReq = await service.connect(
@@ -59,7 +57,7 @@ router.post("/aceptarArchivo", async function (req, res, next) {
 
   // Si ya no tiene documentos pendientes por revisar se acepta todo su expediente
   let respPenRev = await service.connect(
-    `SELECT * FROM DOCUMENTO WHERE Aplicante='${dpi}' AND Nombre='${documento}' AND Formato='${formato}' AND (Estado='pendiente' OR Estado='rechazado')`
+    `SELECT * FROM DOCUMENTO WHERE Aplicante='${dpi}' AND (Estado='pendiente' OR Estado='rechazado')`
   );
 
   // si ya todo fue aceptado
@@ -79,7 +77,7 @@ router.post("/aceptarArchivo", async function (req, res, next) {
   if (respAceptpArch.status == 400 && respPenRev.status == 400
     && respPenRev.status == 400 && respAceptApli.status == 400
     && respRestApli.status == 400) {
-    res.status(400).json({ message: 'algo no salio bien'});
+    res.status(400).json({ message: 'algo no salio bien' });
   } else {
     res
       .status(200)
@@ -103,7 +101,29 @@ router.post("/getAplicantesR", async function (req, res, next) {
       .status(200)
       .json(respGetApl.data);
   }
+});
 
+// Obtiene los aplicantes de su departamento
+router.post("/rechazarDoc", async function (req, res, next) {
+  const { documento, motivo, formato, dpi } = req.body
+  let now= new Date();
+  const fecha = now.getDay() + "/" + now.getMonth() + "/" + now.getFullYear()
+  let respRechDoc = await service.connect(
+    // INSERT INTO RECHAZO VALUES('BOLETO DE ORNATO','hoy', 'no sirve', 'pdf', 201909103);
+    `INSERT INTO RECHAZO VALUES('${documento}','${fecha}','${motivo}','${formato}',${dpi})`
+  );
+  console.log(respRechDoc)
+  let respUpdEst = await service.connect(
+    // INSERT INTO RECHAZO VALUES('BOLETO DE ORNATO','hoy', 'no sirve', 'pdf', 201909103);
+    `UPDATE DOCUMENTO SET Estado='rechazado' WHERE Aplicante='${dpi}' AND Nombre='${documento}' AND Formato='${formato}'`
+  );
+  if (respRechDoc.status == 400 && respUpdEst.status == 400) {
+    res.status(400).json({ message: 'no se pudo' });
+  } else {
+    res
+      .status(200)
+      .json(respRechDoc.data);
+  }
 });
 
 // Obtiene los empleados de su departamento

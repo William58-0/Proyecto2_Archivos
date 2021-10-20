@@ -30,7 +30,8 @@ const AdminUsers = () => {
         for (let i = 0; i < usuarios.length; i++) {
             if (usuarios[i].NOMBRE == NOMBRE) {
                 var obj = usuarios[i]
-                obj.FECHAFIN = "ahorita"
+                obj.FECHAFIN = "hoy"
+                obj.ESTADO = "Inactivo"
                 nuevo.push(obj)
             } else {
                 nuevo.push(usuarios[i])
@@ -45,15 +46,14 @@ const AdminUsers = () => {
     }
 
     const renderHeader = () => {
-        let headerElement = ['NOMBRE', 'ESTADO', 'FECHAINICIO', 'FECHAFIN', 'TIPO', 'ELIMINAR', 'EDITAR']
-
+        let headerElement = ['NOMBRE', 'ESTADO', 'FECHAINICIO', 'FECHAFIN', 'ROL', 'DEPARTAMENTO', 'ELIMINAR', 'EDITAR']
         return headerElement.map((key, index) => {
             return <th key={index}>{key.toUpperCase()}</th>
         })
     }
 
     const renderBody = () => {
-        return usuarios.map(({ NOMBRE, ESTADO, FECHAINICIO, FECHAFIN, TIPO }) => {
+        return usuarios.map(({ NOMBRE, ESTADO, FECHAINICIO, FECHAFIN, TIPO, DEPARTAMENTO }) => {
             return (
                 <tr key={NOMBRE}>
                     <td>{NOMBRE}</td>
@@ -61,6 +61,7 @@ const AdminUsers = () => {
                     <td>{FECHAINICIO}</td>
                     <td>{FECHAFIN}</td>
                     <td>{TIPO}</td>
+                    <td>{DEPARTAMENTO}</td>
                     <td className='opration'>
                         <Button className='button' variant="danger" onClick={() => deleteData(NOMBRE)}>Eliminar</Button>
                     </td>
@@ -78,11 +79,11 @@ const AdminUsers = () => {
     }
 
     const filtrar = () => {
-        if(original.length==0){
-            original=usuarios
-          }else{
+        if (original.length == 0) {
+            original = usuarios
+        } else {
             setUsuarios(original)
-          }
+        }
         var del = usuarios
         if (filName != "") {
             del = usuarios.filter(usuario => usuario.NOMBRE == filName)
@@ -91,10 +92,10 @@ const AdminUsers = () => {
             del = usuarios.filter(usuario => usuario.ESTADO == filEstado)
             setUsuarios(del)
         } if (filInicio != "") {
-            del = usuarios.filter(usuario => usuario.INICIO == filInicio)
+            del = usuarios.filter(usuario => usuario.FECHAINICIO == filInicio)
             setUsuarios(del)
         } if (filFin != "") {
-            del = usuarios.filter(usuario => usuario.FIN == filFin)
+            del = usuarios.filter(usuario => usuario.FECHAFIN == filFin)
             setUsuarios(del)
         } if (filTipo != "") {
             del = usuarios.filter(usuario => usuario.TIPO == filTipo)

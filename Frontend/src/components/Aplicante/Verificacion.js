@@ -73,7 +73,6 @@ function AplicanteVerificacion() {
         escritos.push(response.data[i].NOMBRE)
       }
     }
-    nuevos.push({ NOMBRE: "CV", FORMATO: "PDF", TAMANIO: "5", OBLIGATORIO: "Sí" })
     setReq(nuevos)
   }
 
@@ -101,7 +100,7 @@ function AplicanteVerificacion() {
     if (Apellidos == "") { envApellidos = actualApe } else { envApellidos = Apellidos }
     if (Correo == "") { envCorreo = actualCorreo } else { envCorreo = Correo }
     if (Direccion == "") { envDireccion = actualDir } else { envDireccion = Direccion }
-    if (Telefono == "") { envTelefono = actualTel } else { envTelefono = envTelefono }
+    if (Telefono == "") { envTelefono = actualTel } else { envTelefono = Telefono }
     actualizarDatos(actualDPI, envNombres, envApellidos, envCorreo, envDireccion, envTelefono)
       .then(res => {
         console.log(res)
@@ -127,11 +126,12 @@ function AplicanteVerificacion() {
   const submit = async () => {
     const formdata = new FormData()
     formdata.append('avatar', userInfo.file);
-    axios.post("http://localhost:8080/imageupload", formdata, {
+    axios.post("http://localhost:9000/imageupload", formdata, {
       headers: { "Content-Type": "multipart/form-data" }
     })
       .then(res => { // then print response status
         console.warn(res);
+        alert("Archivo subido")
         if (res.data.success === 1) {
           setSuccess("Image upload successfully")
         }
@@ -221,8 +221,6 @@ function AplicanteVerificacion() {
               </Row>
               <br />
             </form>
-
-
           </Col>
 
           <Col >

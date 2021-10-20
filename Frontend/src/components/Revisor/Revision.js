@@ -40,7 +40,7 @@ function RevisorRevision() {
     console.log(response)
     var nuevo = []
     for (let i = 0; i < response.data.length; i++) {
-      if (response.data[i].ESTADO == 'pendiente') {
+      if (response.data[i].ESTADO == 'pendiente' || response.data[i].ESTADO == 'revisado' || response.data[i].ESTADO == 'aceptado') {
         var nombre = response.data[i].NOMBRES.split(" ", 1)[0] + " " + response.data[i].APELLIDOS.split(" ", 1)[0]
         response.data[i].NOMBRES = nombre
         nuevo.push(response.data[i])

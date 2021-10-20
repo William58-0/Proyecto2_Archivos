@@ -24,12 +24,6 @@ const getDep = async () => {
     .catch((err) => console.log(err));
 }
 
-const volver = <Route
-  path="/adminsistema/adminusershome/adminusers"
-  exact
-  component={AdminUsersHome}
-/>
-
 function EditUser() {
   console.log(useParams())
   original = useParams().nombre
@@ -64,17 +58,12 @@ function EditUser() {
     if (nombre == "") { nombreVar = nombreDef } else { nombreVar = nombre }
     if (password == "") { passwordVar = passwordDef } else { passwordVar = password }
     if (tipo == "") { tipoVar = tipoDef } else { tipoVar = tipo }
-    if (departamento == "") { departamentoVar = departamentoDef } else { departamentoVar = departamento }
-
-    console.log(nombreVar)
-    console.log(passwordVar)
-    console.log(tipoVar)
-    console.log(departamentoVar)
+    if (departamento == "") { departamentoVar = departamentoDef } else { departamentoVar = departamento } 
 
     editarusuario(original, nombreVar, passwordVar, tipoVar, departamentoVar)
       .then(res => {
         console.log(res)
-        return volver
+        alert("Usuario actualizado correctamente")
       })
       .catch((err) => console.log(err));
 

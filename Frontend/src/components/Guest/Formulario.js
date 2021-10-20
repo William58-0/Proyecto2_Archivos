@@ -6,8 +6,7 @@ import { Container, Row, Col } from 'reactstrap';
 import { MDBTable, MDBTableBody, MDBTableHead } from 'mdbreact';
 
 //import { getRequisitos } from '../../utils/api';
-import { getRevisor } from '../../utils/api';
-import { insertAplicante } from '../../utils/api';
+import { getRevisor, insertAplicante} from '../../utils/api';
 
 function GuestForm() {
   //console.log(useParams())
@@ -32,30 +31,10 @@ function GuestForm() {
     
   }
 
-  const columns = [
-    {
-      label: 'Requisito'
-    },
-    {
-      label: 'Formatos'
-    },
-    {
-      label: 'Tamaño'
-    },
-    {
-      label: 'Obligatorio'
-    }
-  ]
-
   const renderRedirect = () => {
     if (redirect) {
       return <Redirect to='/guest' />
     }
-  }
-
-  function probar() {
-    console.log(departamento)
-    console.log(revisor)
   }
 
   const [userInfo, setuserInfo] = useState({
@@ -95,24 +74,23 @@ function GuestForm() {
   }
 
   const Enviar = async () => {
-    console.log(dpi)
-    console.log(nombres)
-    console.log(apellidos)
-    console.log(correo)
-    console.log(direccion)
-    console.log(telefono)
-    insertAplicante(dpi, nombres, apellidos, correo, direccion, telefono, departamento, puesto, revisor)
-            .then(res => {
-                console.log(res)
-                alert("Formulario enviado!")
-                //alert("ANOTE SU CONTRASEÑA: "+res.data)
-                setRedirect(true)
-            })
-            .catch((err) => {
-            console.log(err) 
-            setRedirect(false)
-            alert("Corrija los datos")
-            });
+    if(revisor=="NO DISPONIBLE"){
+      alert("No tiene un revisor disponible")
+    }else{
+      insertAplicante(dpi, nombres, apellidos, correo, direccion, telefono, departamento, puesto, revisor)
+      .then(res => {
+          console.log(res)
+          alert("Formulario enviado!")
+          //alert("ANOTE SU CONTRASEÑA: "+res.data)
+          setRedirect(true)
+      })
+      .catch((err) => {
+      console.log(err) 
+      setRedirect(false)
+      alert("Corrija los datos")
+      });
+    }
+    
   }
 
   return (
@@ -219,10 +197,6 @@ function GuestForm() {
         </Row>
 
       </Container>
-
-      <button type="submit" className="btn btn-dark" onClick={probar}> probar </button>
-
-
 
       <br /><br />
       <br /><br />

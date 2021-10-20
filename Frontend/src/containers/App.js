@@ -23,6 +23,7 @@ import RevisorMessenger from '../components/Revisor/RevisorMessenger';
 // Aplicante
 import AplicanteLogin from '../components/Aplicante/AplicanteLogin';
 import AplicanteVerificacion from '../components/Aplicante/Verificacion';
+import AplicanteCorreccion from '../components/Aplicante/Correccion';
 import AplicanteRevision from '../components/Aplicante/Revision';
 import AplicanteMessenger from '../components/Aplicante/AplicanteMessenger';
 
@@ -146,6 +147,11 @@ class App extends Component {
                 path="/aplicante/revision/:dpi/:departamento/:puesto"
                 exact
                 component={AplicanteRevision}
+              />
+              <Route
+                path="/aplicante/correccion/:dpi/:departamento/:puesto"
+                exact
+                component={AplicanteCorreccion}
               />
               <Route
                 path="/aplicante/messenger/:dpi/:departamento/:puesto/:revisor"

@@ -47,7 +47,7 @@ export function sendMessage(emisor, texto, receptor) {
 
 // Abrir Documento(en realidad lo copia del backend como file a documentos del frontend)
 export function abrirDocumento(dpi, documento, formato) {
-  documento=documento.toUpperCase()
+  documento = documento.toUpperCase()
   const info = { dpi, documento, formato }
   return axios.post('http://localhost:9000/abrirDocumento', info)
 }
@@ -109,9 +109,16 @@ export function aceptarAplicante(dpi) {
 
 // Acepta un archivo de aplicante
 export function aceptarArchivo(dpi, documento, formato, revisor) {
-  documento=documento.toUpperCase()
+  documento = documento.toUpperCase()
   const archivo = { dpi, documento, formato, revisor }
   return axios.post('http://localhost:9000/Revisor/aceptarArchivo', archivo)
+}
+
+// Ingresa un rechazo
+export function rechazarDoc(documento, motivo, formato, dpi) {
+  documento = documento.toUpperCase()
+  const rechazo = { documento, motivo, formato, dpi }
+  return axios.post('http://localhost:9000/Revisor/rechazarDoc', rechazo)
 }
 
 // ------------------------------------------------------------------------------------------ Aplicante
@@ -121,7 +128,7 @@ export function LoginAplicante(dpi, contrasenia) {
   return axios.post('http://localhost:9000/Aplicante/LoginAplicante', aplicante)
 }
 
-// Obtiene el listado de requisitos de un puesto
+// Obtiene los datos de un aplicante
 export function getDatosAplicante(dpi) {
   const info = { dpi }
   return axios.post('http://localhost:9000/Aplicante/getDatosAplicante', info)
@@ -133,19 +140,31 @@ export function getRequisitos(departamento, puesto) {
   return axios.post('http://localhost:9000/getRequisitos', info)
 }
 
-// Obtiene el listado de requisitos de un puesto
+// actualiza los datos del aplicante
 export function actualizarDatos(dpi, nombres, apellidos, correo, direccion, telefono) {
   const info = { dpi, nombres, apellidos, correo, direccion, telefono }
   return axios.post('http://localhost:9000/Aplicante/actualizarDatos', info)
 }
 
-// Obtiene el listado de requisitos de un puesto
+// Obtiene el revisor asignado para un aplicante
 export function getRevisorAsignado(dpi) {
   const info = { dpi }
   return axios.post('http://localhost:9000/Aplicante/getRevisorAsignado', info)
 }
 
+// Obtiene el listado de rechazos de un aplicante
+export function getRechazos(dpi) {
+  const info = { dpi }
+  return axios.post('http://localhost:9000/Aplicante/getRechazos', info)
+}
+
 // ------------------------------------------------------------------------------------------ Guest
+// Calificar puesto
+export function CalifPuesto(puesto, departamento, calificacion) {
+  const info = { puesto, departamento, calificacion }
+  return axios.post('http://localhost:9000/Guest/califPuesto', info)
+}
+
 // Obtiene el revisor con menos carga para asignarselo al guest
 export function getRevisor(departamento) {
   const dept = { departamento }

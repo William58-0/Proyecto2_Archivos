@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getRequisitos, getDocs, abrirDocumento, aceptarArchivo, sendMessage } from '../../utils/api';
-import axios from 'axios';
+import { getRequisitos, getDocs, abrirDocumento, aceptarArchivo, rechazarDoc } from '../../utils/api';
 import { Link, useParams, Redirect } from 'react-router-dom';
 import { Container, Row, Col } from 'reactstrap';
 import { MDBTable, MDBTableBody, MDBTableHead } from 'mdbreact';
@@ -57,7 +56,7 @@ function AplicanteVerificacion() {
   const getDocsAp = async () => {
     const response = await getDocs(dpi)
     console.log(response)
-    var del = response.data.filter(documento => documento.ESTADO == 'pendiente' || documento.ESTADO == 'rechazado')
+    var del = response.data.filter(documento => documento.ESTADO == 'pendiente')
     // se unifican los formatos
     setDocs(del)
   }
@@ -122,14 +121,17 @@ function AplicanteVerificacion() {
     }
   }
 
-  const enviarMensage = async () => {
+  const RechazarReq = async (documento, formato, dpi) => {
     //alert(nuevomsj);
     if (mensaje != "") {
-      sendMessage(revisor, mensaje, dpi);
+      rechazarDoc(documento, mensaje, formato, dpi);
       setMensaje("");
-      alert("Mensaje enviado");
+      var del = docs.filter(documento => documento.NOMBRE !== documento || documento.FORMATO !== formato)
+      setDocs(del)
+      alert("Rechazo enviado");
+      window.location.reload();
     } else {
-      alert("Escriba un mensaje")
+      alert("Escriba un motivo")
     }
   }
 
@@ -209,12 +211,13 @@ function AplicanteVerificacion() {
                             <Button variant="success" onClick={() => aceptArchivo(item.APLICANTE, item.NOMBRE, item.FORMATO)} >Aceptar</Button>
                           </td>
                           <td>
-                            <Button variant="danger" >Rechazar</Button>
+                            <Button variant="danger"  onClick={() => RechazarReq(item.NOMBRE, item.FORMATO, item.APLICANTE)}>Rechazar</Button>
                           </td>
                         </tr>
                       ))}
                     </MDBTableBody >
                   </MDBTable>
+                  <br />
                   <div style={{ textAlign: "right" }}>
                     <Button variant="info" onClick={() => OpenFile()} >Ver Documento Cargado</Button>
                   </div>
@@ -227,7 +230,7 @@ function AplicanteVerificacion() {
         </Row>
       </Container>
       <br />
-      <h3 style={{ marginLeft: "10%", color: "white" }}>Nuevo Mensaje:</h3>
+      <h3 style={{ marginLeft: "10%", color: "white" }}>Motivo De Rechazo:</h3>
       <div style={{ marginLeft: "10%" }}>
         <textarea
           cols="140"
@@ -236,11 +239,9 @@ function AplicanteVerificacion() {
           onChange={(e) => setMensaje(e.target.value)}
         ></textarea>
       </div>
-      <br />
-      <div style={{ textAlign: "right", marginRight: "10%" }}>
-        <button class="btn btn-success" onClick={() => enviarMensage()}>Enviar Mensaje</button><br /><br />
-      </div>
-      <br />
+      <br /><br /><br /><br /><br /><br />
+
+      
     </div >
 
   );
