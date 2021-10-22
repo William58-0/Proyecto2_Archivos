@@ -1,107 +1,170 @@
-import React from 'react';
-import { Link, useParams } from 'react-router-dom';
+import React, { useState, useEffect } from 'react'
 import { getAplicantesC } from '../../utils/api';
+import { eliminarusuario, contratarAplicante, abrirDocumento } from '../../utils/api';
+import { Link, useParams } from 'react-router-dom';
+import { Redirect } from 'react-router';
+import { Button } from "react-bootstrap";
+import styled from 'styled-components';
+import Pdf from "../../Documentos/file.pdf";
 
-var arreglo = [
-  {
-    id: 1,
-    nombre: "hola",
-    estado: "activo",
-    inicio: "hoy",
-    fin: "-",
-    rol: "estudiante"
-  }
-]
+var original = []
 
-class CoordDepAprobados extends React.Component {
-  constructor(props) {
-    super(props);
-    //this.ASimbolos();
-    this.state = {
-      arreglo: arreglo,
+const StyledLink = styled(Link)`
+  color: #fff;
+  font-weight: bold;
+  text-transform: capitalize;
+  text-decoration: none;
+  margin: 0 20px;
+`;
+
+const Container = styled.div`
+  width: 100%;
+  height: 50px;
+  background-color: #333;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+`;
+
+function CoordDepAprobados() {
+  const [aplicantes, setAplicantes] = useState([])
+  const [coordinador, setCoord] = useState(useParams().coordinador)
+  const [departamento, setDep] = useState(useParams().departamento)
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  const getData = async () => {
+    const response = await getAplicantesC(departamento)
+    console.log(response)
+    var nuevo = []
+    for (let i = 0; i < response.data.length; i++) {
+      if (response.data[i].ESTADO == 'revisado') {
+        var nombre = response.data[i].NOMBRES.split(" ", 1)[0] + " " + response.data[i].APELLIDOS.split(" ", 1)[0]
+        response.data[i].NOMBRES = nombre
+        nuevo.push(response.data[i])
+      }
     }
+
+    setAplicantes(nuevo)
   }
 
-  render() {
-    return (
+  const deleteData = (NOMBRE) => {
+    var nuevo = []
+    for (let i = 0; i < aplicantes.length; i++) {
+      if (aplicantes[i].NOMBRE == NOMBRE) {
+        var obj = aplicantes[i]
+        obj.FECHAFIN = "hace un momento"
+        nuevo.push(obj)
+      } else {
+        nuevo.push(aplicantes[i])
+      }
+    }
+    setAplicantes(nuevo)
+    eliminarusuario(NOMBRE)
+      .then(res => {
+        console.log(res)
+      })
+      .catch((err) => console.log(err));
+    //const del = aplicantes.filter(usuario => NOMBRE !== usuario.NOMBRE)
+  }
+
+  const aceptar = (DPI) => {
+    contratarAplicante(DPI)
+      .then(res => {
+        console.log(res)
+        alert("Aplicante Contratado!")
+        const del = aplicantes.filter(aplicante => aplicante.DPI !== DPI)
+        setAplicantes(del)
+      })
+      .catch((err) => {
+        console.log(err)
+        alert("Ocurrio un error")
+      });
+  }
+
+  const renderHeader = () => {
+    let headerElement = ['DPI', 'NOMBRE', 'CORREO', 'DIRECCION', 'TELEFONO', 'PUESTO', 'FECHA', 'VER', 'ASOCIAR', 'ELIMINAR']
+    return headerElement.map((key, index) => {
+      return <th key={index}>{key.toUpperCase()}</th>
+    })
+  }
+
+  const renderBody = () => {
+    return aplicantes.map(({ DPI, NOMBRES, CORREO, DIRECCION, TELEFONO, PUESTO, FECHAINICIO }) => {
+      return (
+        <tr key={DPI}>
+          <td>{DPI}</td>
+          <td>{NOMBRES}</td>
+          <td>{CORREO}</td>
+          <td>{DIRECCION}</td>
+          <td>{TELEFONO}</td>
+          <td>{PUESTO}</td>
+          <td>{FECHAINICIO}</td>
+
+          <td className='opration'>
+          <Link to={"/coorddep/contratados/verExp/" + coordinador + "/" + DPI + "/" + departamento }>
+              <Button variant="info">Ver Expediente</Button>
+            </Link>
+          </td>
+          <td className='opration'>
+            <Button className='button' onClick={() => aceptar(DPI)}>Asociar</Button>
+          </td>
+          <td className='opration'>
+            <Button className='button' variant="danger" onClick={() => deleteData(DPI)}>Descartar</Button>
+          </td>
+        </tr>
+      )
+    })
+  }
+
+  return (
+    <>
       <div>
-        <br />
-        <Link to="/">
-          <button style={{ marginLeft: "2%" }} class="btn btn-success">
-            Regresar
-          </button>
-        </Link><br />
+        <Container >
+          <StyledLink to="/">201909103</StyledLink>
+          <StyledLink to="/">Inicio</StyledLink>
+          <StyledLink to={"/coorddep/aprobados/" + departamento + "/" + coordinador}>Aprobados por Revisores</StyledLink>
+          <StyledLink to={"/coorddep/contratados/" + departamento + "/" + coordinador}>Contratados</StyledLink>
+        </Container>
+      </div>
 
-        <nav class="navbar navbar-expand-lg navbar-light" style={{ color: "white", marginTop: "2%" }}>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <Link to="/coorddep/aprobados" style={{ margin: "auto" }}>
-              <button class="btn btn-success">
-                <i>Aprobados por Revisores</i>
-              </button>
-            </Link>
+      <br />
+      <h1 style={{ textAlign: "center", color: "white" }}>Coordinador: {coordinador} - Departamento: {departamento}</h1>
+      <br />
 
-            <Link to="/coorddep/contratados" style={{ margin: "auto" }}>
-              <button class="btn btn-info" >
-                <i>Contratados</i>
-              </button>
-            </Link>
-
-          </div>
-        </nav >
-
-        <div className="row">
-          <div className="col-md-12">
-            <form style={{
-              margin: "auto",
-              backgroundColor: "#4884af",
-              marginTop: "2%",
-              width: "auto",
-              padding: "2%",
-              borderRadius: "2%",
-              color: "white"
-            }}>
-              <h1 style={{ textAlign: "center" }}>Aspirantes Aprobados por Revisores</h1>
-              <table class="table table-sm table-hover">
-                <tbody class="tblsimbolos">
-                  <td>NOMBRE</td>
-                  <td>ESTADO</td>
-                  <td>FECHA INICIO</td>
-                  <td>FECHA FIN</td>
-                  <td>ROL</td>
-                  <td>DESCARTAR</td>
-                  <td>CONTRATAR</td>
-                  {arreglo.map(item => (
-                    <tr key={item.id}>
-                      <td>{item.nombre}</td>
-                      <td>{item.estado}</td>
-                      <td>{item.inicio}</td>
-                      <td>{item.fin}</td>
-                      <td>{item.rol}</td>
-                      <td>
-                        <button class="btn btn-danger" style={{ marginLeft: "2%" }}>
-                          Descartar
-                        </button>
-                      </td>
-                      <td>
-                        <button class="btn btn-info" style={{ marginLeft: "2%" }}>
-                          Contratar
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </form>
-          </div>
+      <div className="row">
+        <div className="col-md-12">
+          <form style={{
+            margin: "auto",
+            backgroundColor: "#4884af",
+            marginTop: "2%",
+            width: "auto",
+            padding: "2%",
+            borderRadius: "2%",
+            color: "white"
+          }}>
+            <h1 style={{ textAlign: "center" }}>Aprobados por Revisores</h1>
+            <br />
+            <table class="table table-sm table-hover" >
+              <thead class="tblsimbolos">
+                <tr>{renderHeader()}</tr>
+              </thead>
+              <tbody class="tblsimbolos">
+                {renderBody()}
+              </tbody>
+            </table>
+          </form>
         </div>
-        <br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br />
+      </div>
 
-      </div >
-
-    );
-  }
+      <br /><br /><br /><br /><br />
+      <br /><br /><br /><br /><br />
+      <br /><br /><br /><br /><br />
+    </>
+  )
 }
 
-export default CoordDepAprobados;
+
+export default CoordDepAprobados

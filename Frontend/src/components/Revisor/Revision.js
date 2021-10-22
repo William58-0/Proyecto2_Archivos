@@ -69,9 +69,9 @@ function RevisorRevision() {
           <td>{ESTADO}</td>
 
           <td className='opration'>
-            <Link to={"/revisor/revision/verExp/"+revisor+"/"+DPI+"/"+DEPARTAMENTO+"/"+PUESTO}>
+            <Link to={"/revisor/revision/verExp/" + revisor + "/" + DPI + "/" + DEPARTAMENTO + "/" + PUESTO}>
               <Button variant="info">Ver Expediente</Button>
-              </Link>
+            </Link>
           </td>
         </tr>
       )

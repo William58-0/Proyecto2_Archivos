@@ -27,6 +27,12 @@ export function getUsuario(nombre) {
   return axios.post('http://localhost:9000/getUsuario', nombre)
 }
 
+// Obtiene los datos de un aplicante
+export function getDatosAplicante(dpi) {
+  const info = { dpi }
+  return axios.post('http://localhost:9000/getDatosAplicante', info)
+}
+
 // Obtiene los documentos subidos por un aplicante
 export function getDocs(dpi) {
   const info = { dpi }
@@ -79,13 +85,15 @@ export function eliminarusuario(name) {
 
 // ------------------------------------------------------------------------------------------ CoordDep
 // Obtiene los aplicantes de su departamento
-export function getAplicantesC(dept) {
-  return axios.post('http://localhost:9000/CoordDep/getAplicantes', dept)
+export function getAplicantesC(dep) {
+  const info = { dep }
+  return axios.post('http://localhost:9000/CoordDep/getAplicantesC', info)
 }
 
-// Obtiene los empleados de su departamento
-export function getEmpleadosC(dept) {
-  return axios.post('http://localhost:9000/CoordDep/getEmpleados', dept)
+// Contrata a un aplicante
+export function contratarAplicante(dpi) {
+  const aplicante = { dpi }
+  return axios.post('http://localhost:9000/CoordDep/contratarAplicante', aplicante)
 }
 
 // ------------------------------------------------------------------------------------------ Revisor
@@ -126,12 +134,6 @@ export function rechazarDoc(documento, motivo, formato, dpi) {
 export function LoginAplicante(dpi, contrasenia) {
   const aplicante = { dpi, contrasenia }
   return axios.post('http://localhost:9000/Aplicante/LoginAplicante', aplicante)
-}
-
-// Obtiene los datos de un aplicante
-export function getDatosAplicante(dpi) {
-  const info = { dpi }
-  return axios.post('http://localhost:9000/Aplicante/getDatosAplicante', info)
 }
 
 // Obtiene el listado de requisitos de un puesto

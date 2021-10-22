@@ -12,6 +12,7 @@ import EditUser from '../components/AdminSistema/AdminUsuarios/EditUser';
 import CoordDepLogin from '../components/CoordDep/CoordDepLogin';
 import CoordDepAprobados from '../components/CoordDep/Aprobados';
 import CoordDepContratados from '../components/CoordDep/Contratados';
+import CoordDepVerExp from '../components/CoordDep/VerExpediente';
 
 // Revisor de Expedientes
 import RevisorLogin from '../components/Revisor/RevisorLogin';
@@ -92,14 +93,19 @@ class App extends Component {
                 component={CoordDepLogin}
               />
               <Route
-                path="/coorddep/aprobados"
+                path="/coorddep/aprobados/:departamento/:coordinador"
                 exact
                 component={CoordDepAprobados}
               />
               <Route
-                path="/coorddep/contratados"
+                path="/coorddep/contratados/:departamento/:coordinador"
                 exact
                 component={CoordDepContratados}
+              />
+              <Route
+                path="/coorddep/contratados/verExp/:coordinador/:dpi/:departamento"
+                exact
+                component={CoordDepVerExp}
               />
 
               <Route

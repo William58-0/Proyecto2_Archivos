@@ -15,7 +15,7 @@ function RevisorLogin ()  {
 
   const renderRedirect = () => {
     if (redirect) {
-      return <Redirect to={'/revisor/aplicantes/'+departamento} />
+      return <Redirect to={'/coorddep/aprobados/'+departamento+'/'+name} />
     }
   }
 

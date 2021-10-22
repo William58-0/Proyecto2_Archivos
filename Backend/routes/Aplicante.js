@@ -29,24 +29,6 @@ router.post("/LoginAplicante", async function (req, res, next) {
 });
 
 // Para que el aplicante ingrese a la plataforma
-router.post("/getDatosAplicante", async function (req, res, next) {
-  const { dpi } = req.body
-  let respGetData = await service.connect(
-    `SELECT * FROM APLICANTE_EMPLEADO WHERE DPI = ${dpi}`
-  );
-  console.log(respGetData)
-
-  if (respGetData.status == 400) {
-    res.status(400).json({ message: respGetData.message });
-  } else {
-    res
-      .status(200)
-      .json(respGetData.data);
-  }
-  
-});
-
-// Para que el aplicante ingrese a la plataforma
 router.post("/actualizarDatos", async function (req, res, next) {
   const { dpi, nombres, apellidos, correo, direccion, telefono } = req.body
   let respActData = await service.connect(

@@ -81,6 +81,24 @@ router.post("/getUsuario", async function (req, res, next) {
   }
 });
 
+// Obtiene los datos de un aplicante
+router.post("/getDatosAplicante", async function (req, res, next) {
+  const { dpi } = req.body
+  let respGetData = await service.connect(
+    `SELECT * FROM APLICANTE_EMPLEADO WHERE DPI = ${dpi}`
+  );
+  console.log(respGetData)
+
+  if (respGetData.status == 400) {
+    res.status(400).json({ message: respGetData.message });
+  } else {
+    res
+      .status(200)
+      .json(respGetData.data);
+  }
+  
+});
+
 router.post("/getRequisitos", async function (req, res, next) {
   const { departamento, puesto } = req.body;
   let responseReq = await service.connect(
@@ -253,6 +271,5 @@ router.post("/getDocs", async function (req, res, next) {
       .json(respGetDocs.data);
   }
 });
-
 
 module.exports = router;
