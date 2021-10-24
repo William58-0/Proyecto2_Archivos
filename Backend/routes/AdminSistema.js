@@ -21,7 +21,17 @@ router.post("/cargamasiva", async function (req, res, next) {
     jsonData = JSON.stringify(result, null, 4);
     jsonData = JSON.parse(jsonData)
   });
+
   var arregloDep = jsonData.departamentos.departamento
+  //console.log(arregloDep)
+  InsertData(arregloDep);
+  res
+    .status(200)
+    .json('');
+
+});
+
+async function InsertData(arregloDep) {
   console.log("INSERTANDO DEPARTAMENTOS")
   for (let contDep = 0; contDep < arregloDep.length; contDep++) { // ------------------------------------------ CICLO DEPARTAMENTOS
     var nombreDep = arregloDep[contDep].nombre[0]
@@ -64,12 +74,24 @@ router.post("/cargamasiva", async function (req, res, next) {
         }
       }
     }
+    var HayMasDep=false
+    var arregloDepIns=[]
+    try{
+      arregloDepIns = arregloDep[contDep].departamentos[0].departamento
+      console.log(arregloDepIns)
+      if(arregloDepIns==undefined){
+        HayMasDep=false
+      }else{
+        HayMasDep=true
+      } 
+    }catch{
+      HayMasDep=false
+    }
+    if(HayMasDep){
+      InsertData(arregloDepIns)
+    }
   }
-  res
-    .status(200)
-    .json('');
-
-});
+}
 
 router.post("/registrarusuario", async function (req, res, next) {
   const { nombre, contrasenia, tipo, departamento } = req.body;
@@ -95,7 +117,7 @@ router.post("/registrarusuario", async function (req, res, next) {
         .status(200)
         .json({ message: "Usuario creado correctamente" });
     }
-  } 
+  }
   // si ya existe que solo le actualice el estado y la fecha de inicio
   else {
     // INSERT INTO COORDINADOR_REVISOR VALUES('coord1','1234', 'hoy', 'maniana', 'Coordinador', 'Activo', 0, 'uno' );
