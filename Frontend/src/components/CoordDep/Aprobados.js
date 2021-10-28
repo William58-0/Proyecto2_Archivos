@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { getAplicantesC } from '../../utils/api';
-import { eliminarusuario, contratarAplicante, abrirDocumento } from '../../utils/api';
+import { descartarApRevisado, contratarAplicante, abrirDocumento } from '../../utils/api';
 import { Link, useParams } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import { Button } from "react-bootstrap";
@@ -40,7 +40,7 @@ function CoordDepAprobados() {
     console.log(response)
     var nuevo = []
     for (let i = 0; i < response.data.length; i++) {
-      if (response.data[i].ESTADO == 'revisado') {
+      if (response.data[i].ESTADO == 'aceptado') {
         var nombre = response.data[i].NOMBRES.split(" ", 1)[0] + " " + response.data[i].APELLIDOS.split(" ", 1)[0]
         response.data[i].NOMBRES = nombre
         nuevo.push(response.data[i])
@@ -50,21 +50,11 @@ function CoordDepAprobados() {
     setAplicantes(nuevo)
   }
 
-  const deleteData = (NOMBRE) => {
-    var nuevo = []
-    for (let i = 0; i < aplicantes.length; i++) {
-      if (aplicantes[i].NOMBRE == NOMBRE) {
-        var obj = aplicantes[i]
-        obj.FECHAFIN = "hace un momento"
-        nuevo.push(obj)
-      } else {
-        nuevo.push(aplicantes[i])
-      }
-    }
-    setAplicantes(nuevo)
-    eliminarusuario(NOMBRE)
+  const deleteData = (DPI) => {
+    descartarApRevisado(DPI)
       .then(res => {
-        console.log(res)
+        console.log(res);
+        window.location.reload();
       })
       .catch((err) => console.log(err));
     //const del = aplicantes.filter(usuario => NOMBRE !== usuario.NOMBRE)

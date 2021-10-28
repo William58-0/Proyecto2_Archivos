@@ -5,6 +5,7 @@ import { cargamasiva } from '../../utils/api';
 function CargaMasiva() {
   var texto = ""
   const [myValue, setMyValue] = useState('')
+  const [respuesta, setResp] = useState('')
 
   const readFile = (e) => {
     const file = e.target.files[0];
@@ -22,8 +23,7 @@ function CargaMasiva() {
   }
 
   const limpiar = (e) => {
-    setMyValue("");
-    texto = ""
+    window.location.reload();
   }
 
   const GuardarEnBase = (e) => {
@@ -34,6 +34,7 @@ function CargaMasiva() {
         .then(res => {
           console.log(res)
           alert("Datos Guardados!")
+          setResp(JSON.stringify(res.data), null, '\t')
         })
         .catch((err) => {
           console.log(err)
@@ -71,6 +72,14 @@ function CargaMasiva() {
       </div>
       <br />
       <br />
+      <div style={{ textAlign: "center" }}>
+        <textarea
+          cols="100"
+          rows="10"
+          readOnly={true}
+          value={respuesta}
+        ></textarea>
+      </div>
     </div>
   );
 

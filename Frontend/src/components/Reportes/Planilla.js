@@ -114,7 +114,7 @@ function Planilla() {
         </Container>
       </div>
       <br />
-      <h1 style={{ textAlign: "center", color: "white" }}>Planilla</h1>
+      <h1 style={{ textAlign: "center", color: "white" }}>Planilla de Personas Contratadas</h1>
       <br />
       <div style={{ textAlign: "right", marginLeft: "55%", marginRight: "2%" }}>
         <Row>

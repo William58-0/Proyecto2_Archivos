@@ -80,7 +80,7 @@ router.post("/insertAplicante", async function (req, res, next) {
   // se actualiza el trabajo del revisor
   // UPDATE COORDINADOR_REVISOR SET ParaRevisar = ParaRevisar + 1 WHERE Nombre='reev1' AND Tipo='Revisor' AND Departamento='uno' AND Estado='Activo'
   let respTrabRev = await service.connect(
-    `UPDATE COORDINADOR_REVISOR SET ParaRevisar = ParaRevisar + 1 WHERE Nombre = '${revisor}' AND Tipo='Revisor' AND Departamento='${depart}' AND Estado='Activo'`
+    `UPDATE COORDINADOR_REVISOR SET ParaRevisar = ParaRevisar + 1 WHERE Nombre = '${revisor}' AND Tipo='Revisor' AND Estado='Activo'`
   );
   console.log(respTrabRev)
   if (respTrabRev.status == 400) {

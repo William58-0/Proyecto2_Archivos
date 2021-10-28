@@ -41,7 +41,7 @@ const GuestMessenger = () => {
   const getData = async () => {
     const response = await getMensajes(perfil)
     var del = response.data.filter(mensaje => mensaje.RECEPTOR === perfil)
-
+    del=del.filter(mensaje => mensaje.EMISOR === 'Sistema')
     setMensajes(del)
   }
 

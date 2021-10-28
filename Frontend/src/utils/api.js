@@ -96,6 +96,12 @@ export function contratarAplicante(dpi) {
   return axios.post('http://localhost:9000/CoordDep/contratarAplicante', aplicante)
 }
 
+// Para descartar aplicantes
+export function descartarApRevisado(dpii) {
+  const usuario = { dpi: dpii };
+  return axios.post('http://localhost:9000/CoordDep/descartarApRevisado', usuario)
+}
+
 // ------------------------------------------------------------------------------------------ Revisor
 // Obtiene los aplicantes de su departamento
 export function getAplicantesR(rev) {
@@ -127,6 +133,12 @@ export function rechazarDoc(documento, motivo, formato, dpi) {
   documento = documento.toUpperCase()
   const rechazo = { documento, motivo, formato, dpi }
   return axios.post('http://localhost:9000/Revisor/rechazarDoc', rechazo)
+}
+
+// Para descartar aplicantes
+export function descartarAplicante(dpii) {
+  const usuario = { dpi: dpii };
+  return axios.post('http://localhost:9000/Revisor/descartarAplicante', usuario)
 }
 
 // ------------------------------------------------------------------------------------------ Aplicante

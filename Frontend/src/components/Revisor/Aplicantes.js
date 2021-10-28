@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { getAplicantesR } from '../../utils/api';
-import { eliminarusuario, aceptarAplicante, abrirDocumento } from '../../utils/api';
+import { descartarAplicante, getAplicantesR, aceptarAplicante, abrirDocumento } from '../../utils/api';
 import { Link, useParams } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import { Button } from "react-bootstrap";
@@ -42,7 +41,7 @@ function RevisorAplicantes() {
     console.log(response)
     var nuevo = []
     for (let i = 0; i < response.data.length; i++) {
-      if (response.data[i].ESTADO == 'pendiente') {
+      if (response.data[i].ESTADO == 'pendiente' || response.data[i].ESTADO == 'revisado') {
         var nombre = response.data[i].NOMBRES.split(" ", 1)[0] + " " + response.data[i].APELLIDOS.split(" ", 1)[0]
         response.data[i].NOMBRES = nombre
         nuevo.push(response.data[i])
@@ -52,21 +51,12 @@ function RevisorAplicantes() {
     setAplicantes(nuevo)
   }
 
-  const deleteData = (NOMBRE) => {
+  const deleteData = (DPI) => {
     var nuevo = []
-    for (let i = 0; i < aplicantes.length; i++) {
-      if (aplicantes[i].NOMBRE == NOMBRE) {
-        var obj = aplicantes[i]
-        obj.FECHAFIN = "hace un momento"
-        nuevo.push(obj)
-      } else {
-        nuevo.push(aplicantes[i])
-      }
-    }
-    setAplicantes(nuevo)
-    eliminarusuario(NOMBRE)
+    descartarAplicante(DPI)
       .then(res => {
-        console.log(res)
+        console.log(res);
+        window.location.reload();
       })
       .catch((err) => console.log(err));
     //const del = aplicantes.filter(usuario => NOMBRE !== usuario.NOMBRE)

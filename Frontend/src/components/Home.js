@@ -55,7 +55,7 @@ class Home extends React.Component {
             </Link><br />
             <Link to="/guestLogin">
               <button style={{ marginBottom: "4%" }} class="btn btn-info">
-              Correos Guest
+              Centro De Correos
               </button>
             </Link><br />
             <Link to="/reportes/organigrama">

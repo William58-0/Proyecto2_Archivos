@@ -64,7 +64,7 @@ router.post("/aceptarArchivo", async function (req, res, next) {
   if (respPenRev.data.length == 0) {
     // cambia el estado del aplicante
     let respAceptApli = await service.connect(
-      `UPDATE APLICANTE_EMPLEADO SET Estado='revisado' WHERE DPI='${dpi}'`
+      `UPDATE APLICANTE_EMPLEADO SET Estado='aceptado' WHERE DPI='${dpi}'`
     );
 
     // se resta la cantidad de trabajo al revisor
@@ -107,6 +107,7 @@ router.post("/getAplicantesR", async function (req, res, next) {
 router.post("/rechazarDoc", async function (req, res, next) {
   const { documento, motivo, formato, dpi } = req.body
   let now= new Date();
+  var actual = Date.now();
   const fecha = now.getDay() + "/" + now.getMonth() + "/" + now.getFullYear()
   let respRechDoc = await service.connect(
     // INSERT INTO RECHAZO VALUES('BOLETO DE ORNATO','hoy', 'no sirve', 'pdf', 201909103);
@@ -117,6 +118,11 @@ router.post("/rechazarDoc", async function (req, res, next) {
     // INSERT INTO RECHAZO VALUES('BOLETO DE ORNATO','hoy', 'no sirve', 'pdf', 201909103);
     `UPDATE DOCUMENTO SET Estado='rechazado' WHERE Aplicante='${dpi}' AND Nombre='${documento}' AND Formato='${formato}'`
   );
+
+  let respMessage = await service.connect(
+    `INSERT INTO MENSAJE VALUES ('Sistema',${actual}, '${dpi}', 'Se rechazo: ${documento} . ${formato}  por: ${motivo}')`
+  );
+
   if (respRechDoc.status == 400 && respUpdEst.status == 400) {
     res.status(400).json({ message: 'no se pudo' });
   } else {
@@ -139,6 +145,27 @@ router.post("/getEmpleadosR", async function (req, res, next) {
       .status(200)
       .json(respGetEmpl.data);
   }
+});
+
+// para descartar aplicantes
+router.post("/descartarAplicante", async function (req, res, next) {
+  const { dpi } = req.body;
+  let now = new Date();
+  const fechafin = now.getDay() + "/" + now.getMonth() + "/" + now.getFullYear()
+  let response = await service.connect(
+    `UPDATE APLICANTE_EMPLEADO SET Estado='descartado', FechaFin='${fechafin}' WHERE DPI='${dpi}'`
+  );
+
+  console.log(response)
+
+  if (response.status == 400) {
+    res.status(400).json({ message: response.message });
+  } else {
+    res
+      .status(200)
+      .json({ message: "Usuario eliminado correctamente" });
+  }
+
 });
 
 

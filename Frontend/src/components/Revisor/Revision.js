@@ -38,6 +38,7 @@ function RevisorRevision() {
   const getData = async () => {
     const response = await getAplicantesR(revisor)
     console.log(response)
+    /*
     var nuevo = []
     for (let i = 0; i < response.data.length; i++) {
       if (response.data[i].ESTADO == 'pendiente' || response.data[i].ESTADO == 'revisado' || response.data[i].ESTADO == 'aceptado') {
@@ -46,7 +47,8 @@ function RevisorRevision() {
         nuevo.push(response.data[i])
       }
     }
-    setAplicantes(nuevo)
+    */
+    setAplicantes(response.data)
   }
 
   const renderHeader = () => {

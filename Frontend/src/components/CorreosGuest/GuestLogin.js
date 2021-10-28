@@ -28,13 +28,13 @@ function RevisorLogin ()  {
           setRedirect(false)
           alert("Datos incorrectos")
         } else {
-          if (res.data[0].ESTADO == "aceptado" || res.data[0].ESTADO == "pendiente") {
+          //if (res.data[0].ESTADO == "aceptado" || res.data[0].ESTADO == "pendiente") {
             setRedirect(true)
             alert("Bienvenido")
-          }else{
-            setRedirect(false)
-            alert("Usted ya no es Aplicante")
-          }
+          //}else{
+            //setRedirect(false)
+            //alert("Usted ya no es Aplicante")
+          //}
         }
       })
       .catch((err) => console.log(err));
@@ -52,7 +52,7 @@ function RevisorLogin ()  {
       <br /><br />
       <br /><br />
       <form style={{ textAlign: "center", alignItems: "center", color: "white" }}>
-        <h1 style={{ color: "white" }}>Centro de Correo Aplicantes</h1>
+        <h1 style={{ color: "white" }}>Centro de Correo</h1>
         <label>
           DPI/CUI: <input style={{ marginLeft: "2%", marginBottom: "2%" }}
             type="text" value={dpi} onChange={(e) => setDPI(e.target.value)} />
