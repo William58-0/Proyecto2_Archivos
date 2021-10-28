@@ -37,7 +37,7 @@ async function InsertData(arregloDep) {
     var nombreDep = arregloDep[contDep].nombre[0]
     var capDep = arregloDep[contDep].capital_total[0]
     let responseDep = await service.connect(
-      `BEGIN INSERT INTO DEPARTAMENTO VALUES('${nombreDep}',${capDep}); COMMIT; END;`
+      `BEGIN INSERT INTO DEPARTAMENTO VALUES('${nombreDep}',${capDep},${capDep}); COMMIT; END;`
     );
     var arregloPuestos = arregloDep[contDep].puestos[0].puesto
     console.log("INSERTANDO PUESTOS")

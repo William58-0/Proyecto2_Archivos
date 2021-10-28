@@ -17,11 +17,12 @@ async function connect(consulta) {
       consulta,
       [], // no binds
       {
-        outFormat: oracledb.OBJECT,
+        outFormat: oracledb.OBJECT
       }
     );
 
     //console.log(result.rows);
+    console.log(result)
     return { "status": 200, "data": result.rows };
   } catch (error) {
     return { "status": 400, "message": error.message }

@@ -58,6 +58,11 @@ class Home extends React.Component {
               Correos Guest
               </button>
             </Link><br />
+            <Link to="/reportes/organigrama">
+              <button style={{ marginBottom: "4%" }} class="btn btn-success">
+              Reportes
+              </button>
+            </Link><br />
           </Form>
         </Container>
       </div>
@@ -65,4 +70,4 @@ class Home extends React.Component {
   }
 }
 
-export default Home;
+export default Home

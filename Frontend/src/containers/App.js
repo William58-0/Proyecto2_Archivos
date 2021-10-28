@@ -36,6 +36,14 @@ import GuestForm from '../components/Guest/Formulario';
 import GuestLogin from '../components/CorreosGuest/GuestLogin';
 import GuestMessenger from '../components/CorreosGuest/GuestMessenger';
 
+// Reportes
+import Organigrama from '../components/Reportes/Organigrama';
+import Planilla from '../components/Reportes/Planilla';
+import Top5Contratadas from '../components/Reportes/Top5Contratadas';
+import Top5InvRev from '../components/Reportes/Top5InvRev';
+import Top5DocsRechAp from '../components/Reportes/Top5DocsRechAp';
+import Top5UsoCapDep from '../components/Reportes/Top5UsoCapDep';
+
 import styled from 'styled-components';
 
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
@@ -185,6 +193,37 @@ class App extends Component {
                 path="/guestLogin/messenger/:dpi"
                 exact
                 component={GuestMessenger}
+              />
+
+              <Route
+                path="/reportes/organigrama"
+                exact
+                component={Organigrama}
+              />
+              <Route
+                path="/reportes/planilla"
+                exact
+                component={Planilla}
+              />
+              <Route
+                path="/reportes/top5contratadas"
+                exact
+                component={Top5Contratadas}
+              />
+              <Route
+                path="/reportes/top5invrev"
+                exact
+                component={Top5InvRev}
+              />
+              <Route
+                path="/reportes/top5docsrechap"
+                exact
+                component={Top5DocsRechAp}
+              />
+              <Route
+                path="/reportes/top5usocapdep"
+                exact
+                component={Top5UsoCapDep}
               />
 
               <Redirect to="/" />

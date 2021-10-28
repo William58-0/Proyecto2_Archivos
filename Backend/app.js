@@ -13,6 +13,7 @@ var Aplicante = require("./routes/Aplicante");
 var Guest = require("./routes/Guest");
 var Revisor = require("./routes/Revisor");
 var CorreoGuest = require("./routes/CorreoGuest");
+var Reportes = require("./routes/Reportes");
 
 app.use(cors(corsOptions));
 app.use("", Generales);
@@ -22,6 +23,7 @@ app.use("/Aplicante", Aplicante);
 app.use("/Guest", Guest);
 app.use("/Revisor", Revisor);
 app.use("/CorreoGuest", CorreoGuest);
+app.use("/Reportes", Reportes);
 
 app.listen(9000, () => {
   console.debug("Servidor escuchando en puerto: 9000");

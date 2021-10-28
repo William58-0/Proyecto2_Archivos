@@ -185,3 +185,44 @@ export function LoginGuest(dpi, correo) {
   const aplicante = { dpi, correo }
   return axios.post('http://localhost:9000/CorreoGuest/LoginGuest', aplicante)
 }
+
+// ------------------------------------------------------------------------------------------ Reportes
+// ------------------------------------------------------------------------------ Reporte 1
+// Para los puestos
+export function Rep1Puestos() {
+  return axios.get('http://localhost:9000/Reportes/Rep1Puestos')
+}
+
+// Para los aplicante_empleado
+export function Rep1ApEmp() {
+  return axios.get('http://localhost:9000/Reportes/Rep1ApEmp')    // ------------ Reporte 2 --
+}
+
+// Para los coordinador_revisor
+export function Rep1CoordRev() {
+  return axios.get('http://localhost:9000/Reportes/Rep1CoordRev')
+}
+
+// ------------------------------------------------------------------------------ Reporte 3
+// Para los departamentos con más personas contratadas
+export function Rep3() {
+  return axios.get('http://localhost:9000/Reportes/Rep3')
+}
+
+// ------------------------------------------------------------------------------ Reporte 4
+// Para los revisores con mas invitaciones
+export function Rep4() {
+  return axios.get('http://localhost:9000/Reportes/Rep4')
+}
+
+// ------------------------------------------------------------------------------ Reporte 5
+// Para los aplicantes con mas documentos rechazados
+export function Rep5() {
+  return axios.get('http://localhost:9000/Reportes/Rep5')
+}
+
+// ------------------------------------------------------------------------------ Reporte 6
+// Para los departamentos con mas uso de capital
+export function Rep6() {
+  return axios.get('http://localhost:9000/Reportes/Rep6')
+}
