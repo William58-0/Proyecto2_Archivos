@@ -102,6 +102,12 @@ export function descartarApRevisado(dpii) {
   return axios.post('http://localhost:9000/CoordDep/descartarApRevisado', usuario)
 }
 
+// Para descartar aplicantes
+export function despedirAp(dpii) {
+  const usuario = { dpi: dpii };
+  return axios.post('http://localhost:9000/CoordDep/despedirAp', usuario)
+}
+
 // ------------------------------------------------------------------------------------------ Revisor
 // Obtiene los aplicantes de su departamento
 export function getAplicantesR(rev) {

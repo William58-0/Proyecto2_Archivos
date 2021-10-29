@@ -6,6 +6,19 @@ var router = express.Router();
 const service = require("./connection.js");
 const cors = require("cors");
 
+// Para lo del correo
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'temporalt696@gmail.com',
+    pass: 'sslrvmxtusrxmywa',
+  },
+});
+
 router.use(cors({ origin: true, optionsSuccessStatus: 200 }));
 router.use(bodyParser.json({ limit: "50mb", extended: true }));
 router.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
@@ -66,6 +79,28 @@ router.post("/contratarAplicante", async function (req, res, next) {
       `INSERT INTO MENSAJE VALUES ('Sistema',${actual}, '${dpi}', 'Fue contratado en su puesto')`
     );
 
+    // para enviar correo real
+    try {
+      var mensaje = "Fue contratado en su puesto";
+
+      var mailOptions = {
+        from: 'temporalt696@gmail.com',
+        to: 'wiliamborrayo@gmail.com',    // aqui se le pondria el correo
+        subject: 'Correo real',
+        text: mensaje
+      };
+
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+        } else {
+          console.log('Email enviado: ' + info.response);
+        }
+      });
+    } catch {
+      console.log("no se pudo enviar correo real :(")
+    }
+
     // Se actualiza el capital disponible para el departamento
     let respActCap = await service.connect(
       `UPDATE DEPARTAMENTO SET CAPDIS=${dif} WHERE NOMBRE=(SELECT DEPARTAMENTO FROM APLICANTE_EMPLEADO WHERE DPI=${dpi})`
@@ -104,14 +139,34 @@ router.post("/getEmpleadosC", async function (req, res, next) {
 router.post("/descartarApRevisado", async function (req, res, next) {
   const { dpi } = req.body;
   let now = new Date();
-  const fechafin = now.getDay() + "/" + now.getMonth() + "/" + now.getFullYear()
+  const fechafin = now.getUTCDate() + "/" + now.getUTCMonth() + "/" + now.getFullYear()
   // para actualizar el estado del aplicante
   let response = await service.connect(
     `UPDATE APLICANTE_EMPLEADO SET Estado='descartado', FechaFin='${fechafin}' WHERE DPI='${dpi}'`
   );
   console.log(response)
 
-  // ------------------------------------------------ se recupera el capital
+  if (response.status == 400) {
+    res.status(400).json({ message: response.message });
+  } else {
+    res
+      .status(200)
+      .json({ message: "Usuario eliminado correctamente" });
+  }
+
+});
+
+// para despedir aplicantes
+router.post("/despedirAp", async function (req, res, next) {
+  const { dpi } = req.body;
+  let now = new Date();
+  const fechafin = now.getUTCDate() + "/" + now.getUTCMonth() + "/" + now.getFullYear()
+  // para actualizar el estado del aplicante
+  let response = await service.connect(
+    `UPDATE APLICANTE_EMPLEADO SET Estado='descartado', FechaFin='${fechafin}' WHERE DPI='${dpi}'`
+  );
+  console.log(response)
+
   let respVerifDep = await service.connect(
     `SELECT CAPITAL, CAPDIS FROM DEPARTAMENTO WHERE NOMBRE = (SELECT DEPARTAMENTO FROM APLICANTE_EMPLEADO ae WHERE DPI=${dpi})`
   );
@@ -139,6 +194,5 @@ router.post("/descartarApRevisado", async function (req, res, next) {
   }
 
 });
-
 
 module.exports = router;

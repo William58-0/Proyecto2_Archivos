@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { getAplicantesC } from '../../utils/api';
-import { eliminarusuario, contratarAplicante, abrirDocumento } from '../../utils/api';
+import { despedirAp, contratarAplicante, abrirDocumento } from '../../utils/api';
 import { Link, useParams } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import { Button } from "react-bootstrap";
@@ -50,10 +50,10 @@ function CoordDepContratados() {
     setAplicantes(nuevo)
   }
 
-  const deleteData = (NOMBRE) => {
+  const deleteData = (DPI) => {
     var nuevo = []
     for (let i = 0; i < aplicantes.length; i++) {
-      if (aplicantes[i].NOMBRE == NOMBRE) {
+      if (aplicantes[i].DPI == DPI) {
         var obj = aplicantes[i]
         obj.FECHAFIN = "hace un momento"
         nuevo.push(obj)
@@ -62,9 +62,12 @@ function CoordDepContratados() {
       }
     }
     setAplicantes(nuevo)
-    eliminarusuario(NOMBRE)
+    despedirAp(DPI)
       .then(res => {
         console.log(res)
+        alert("Empleado Despedido")
+        const del = aplicantes.filter(aplicante => aplicante.DPI !== DPI)
+        setAplicantes(del)
       })
       .catch((err) => console.log(err));
     //const del = aplicantes.filter(usuario => NOMBRE !== usuario.NOMBRE)

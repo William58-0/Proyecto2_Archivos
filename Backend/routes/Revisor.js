@@ -6,6 +6,19 @@ var router = express.Router();
 const service = require("./connection.js");
 const cors = require("cors");
 
+// Para lo del correo
+var nodemailer = require('nodemailer');
+
+var transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'temporalt696@gmail.com',
+    pass: 'sslrvmxtusrxmywa',
+  },
+});
+
 router.use(cors({ origin: true, optionsSuccessStatus: 200 }));
 router.use(bodyParser.json({ limit: "50mb", extended: true }));
 router.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
@@ -38,6 +51,28 @@ router.post("/aceptarAplicante", async function (req, res, next) {
   let responseReq = await service.connect(
     `INSERT INTO MENSAJE VALUES ('Sistema',${actual}, '${dpi}', 'Fue aceptado por su revisor, su contraseña es: ${actual}')`
   );
+
+  // para enviar correo real
+  try {
+    var mensaje = "Fue aceptado por su revisor, su contraseña es: "+actual;
+
+    var mailOptions = {
+      from: 'temporalt696@gmail.com',
+      to: 'wiliamborrayo@gmail.com',    // aqui se le pondria el correo
+      subject: 'Correo real',
+      text: mensaje
+    };
+
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Email enviado: ' + info.response);
+      }
+    });
+  } catch {
+    console.log("no se pudo enviar correo real :(")
+  }
 
   if (respAcetpApl.status == 400 && responseReq.status == 400) {
     res.status(400).json({ message: respAcetpApl.message });
@@ -108,7 +143,7 @@ router.post("/rechazarDoc", async function (req, res, next) {
   const { documento, motivo, formato, dpi } = req.body
   let now= new Date();
   var actual = Date.now();
-  const fecha = now.getDay() + "/" + now.getMonth() + "/" + now.getFullYear()
+  const fecha = now.getUTCDate() + "/" + now.getUTCMonth() + "/" + now.getFullYear()
   let respRechDoc = await service.connect(
     // INSERT INTO RECHAZO VALUES('BOLETO DE ORNATO','hoy', 'no sirve', 'pdf', 201909103);
     `INSERT INTO RECHAZO VALUES('${documento}','${fecha}','${motivo}','${formato}',${dpi})`
@@ -151,7 +186,7 @@ router.post("/getEmpleadosR", async function (req, res, next) {
 router.post("/descartarAplicante", async function (req, res, next) {
   const { dpi } = req.body;
   let now = new Date();
-  const fechafin = now.getDay() + "/" + now.getMonth() + "/" + now.getFullYear()
+  const fechafin = now.getUTCDate() + "/" + now.getUTCMonth() + "/" + now.getFullYear()
   let response = await service.connect(
     `UPDATE APLICANTE_EMPLEADO SET Estado='descartado', FechaFin='${fechafin}' WHERE DPI='${dpi}'`
   );

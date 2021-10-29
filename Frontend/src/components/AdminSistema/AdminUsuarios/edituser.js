@@ -86,7 +86,8 @@ function EditUser() {
           <FormLabel>Nombre de Usuario</FormLabel>
           <FormControl
             type="text"
-            value={nombre}
+            value={nombreDef}
+            onlyRead={true}
             defaultValue={nombreDef}
             placeholder={nombreDef}
             onChange={(e) => setNombre(e.target.value)}

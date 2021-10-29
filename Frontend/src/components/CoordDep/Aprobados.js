@@ -64,9 +64,14 @@ function CoordDepAprobados() {
     contratarAplicante(DPI)
       .then(res => {
         console.log(res)
-        alert("Aplicante Contratado!")
-        const del = aplicantes.filter(aplicante => aplicante.DPI !== DPI)
-        setAplicantes(del)
+        if(res.data.message=="aceptado correctamente"){
+          alert("Aplicante Contratado!")
+          const del = aplicantes.filter(aplicante => aplicante.DPI !== DPI)
+          setAplicantes(del)
+        }else{
+          alert("Ya no hay suficiente capital")
+        }
+        
       })
       .catch((err) => {
         console.log(err)

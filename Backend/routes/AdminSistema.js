@@ -263,7 +263,7 @@ async function InsertData(arregloDep) {
 router.post("/registrarusuario", async function (req, res, next) {
   const { nombre, contrasenia, tipo, departamento } = req.body;
   let now = new Date();
-  const fechainicio = now.getDay() + "/" + now.getMonth() + "/" + now.getFullYear()
+  const fechainicio = now.getUTCDate() + "/" + now.getUTCMonth() + "/" + now.getFullYear()
 
   // busca si ya existe el revisor
   let respGetUser = await service.connect(
@@ -327,7 +327,7 @@ router.post("/editarusuario", async function (req, res, next) {
 router.post("/eliminarusuario", async function (req, res, next) {
   const { nombre } = req.body;
   let now = new Date();
-  const fechafin = now.getDay() + "/" + now.getMonth() + "/" + now.getFullYear()
+  const fechafin = now.getUTCDate() + "/" + now.getUTCMonth() + "/" + now.getFullYear()
   // UPDATE COORDINADOR_REVISOR SET Estado = 'Inactivo' WHERE Nombre = 'Anderson';
   let response = await service.connect(
     `UPDATE COORDINADOR_REVISOR SET Estado='Inactivo', FechaFin='${fechafin}' WHERE Nombre='${nombre}'`
