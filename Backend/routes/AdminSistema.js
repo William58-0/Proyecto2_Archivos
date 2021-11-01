@@ -158,6 +158,7 @@ async function InsertData(arregloDep) {
       `BEGIN INSERT INTO DEPARTAMENTO VALUES('${nombreDep}',${capDep},${capDep}); COMMIT; END;`
     );
 
+    console.log(responseDep)
     var objDep = { 'NOMBRE': nombreDep, 'CAPITAL': capDep }
 
     if (!DepartamentosEscritos.includes(nombreDep)) {
@@ -258,6 +259,7 @@ async function InsertData(arregloDep) {
       ParaRetornar = respuesta
     }
   }
+  console.log("Termino de insertar")
 }
 
 router.post("/registrarusuario", async function (req, res, next) {
@@ -309,7 +311,7 @@ router.post("/editarusuario", async function (req, res, next) {
 
   // UPDATE COORDINADOR_REVISOR SET Nombre = 'william', Contrasenia='nueva', Tipo='Rev', Departamento='uno' WHERE Nombre = 'Anderson';
   let response = await service.connect(
-    `UPDATE COORDINADOR_REVISOR SET Nombre='${nombre}', Contrasenia='${contrasenia}', Tipo='${tipo}', Departamento='${departamento}' WHERE Nombre='${original}'`
+    `UPDATE COORDINADOR_REVISOR SET Contrasenia='${contrasenia}', Tipo='${tipo}', Departamento='${departamento}' WHERE Nombre='${original}'`
   );
 
   console.log(response)

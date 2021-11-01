@@ -229,6 +229,7 @@ function AplicanteVerificacion() {
                 ))}
               </MDBTableBody >
             </MDBTable>
+            <br />
             <div style={{ textAlign: "right" }}>
               <Button variant="info" onClick={() => OpenFile()} >Ver Documento Cargado</Button>
             </div>

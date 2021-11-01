@@ -102,7 +102,7 @@ const GuestMessenger = () => {
     //alert(nuevomsj);
     if (receptDPI != undefined) {
       if (nuevomsj != "") {
-        sendMessage(perfil, nuevomsj, receptDPI);
+        const respp = await sendMessage(perfil, nuevomsj, receptDPI);
         window.location.reload();
       } else {
         alert("Escriba un mensaje")

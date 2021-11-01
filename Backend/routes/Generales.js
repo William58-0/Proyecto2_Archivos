@@ -134,9 +134,12 @@ router.post("/getMensajes", async function (req, res, next) {
 router.post("/sendMessage", async function (req, res, next) {
   const { emisor, texto, receptor } = req.body;
   var actual = Date.now()
+  console.log("VIENEEE A ESTOOO")
   let responseReq = await service.connect(
     `INSERT INTO MENSAJE VALUES ('${emisor}',${actual}, '${receptor}', '${texto}')`
   );
+
+  console.log(responseReq)
   if (responseReq.status == 400) {
     res.status(400).json({ message: responseReq.message });
   } else {

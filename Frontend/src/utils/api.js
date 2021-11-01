@@ -48,6 +48,7 @@ export function getMensajes(perfil) {
 // Inserta un mensaje
 export function sendMessage(emisor, texto, receptor) {
   const msj = { emisor, texto, receptor }
+  //alert("viene aquii")
   return axios.post('http://localhost:9000/sendMessage', msj)
 }
 

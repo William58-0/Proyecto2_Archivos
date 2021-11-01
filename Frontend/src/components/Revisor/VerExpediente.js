@@ -233,7 +233,7 @@ function AplicanteVerificacion() {
       <h3 style={{ marginLeft: "10%", color: "white" }}>Motivo De Rechazo:</h3>
       <div style={{ marginLeft: "10%" }}>
         <textarea
-          cols="140"
+          cols="98"
           rows="2"
           value={mensaje}
           onChange={(e) => setMensaje(e.target.value)}

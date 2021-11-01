@@ -8,7 +8,7 @@ var connAttrs = {
 };
 
 async function connect(consulta) {
-  console.log(consulta);
+  //console.log(consulta);
   let conn;
 
   try {
@@ -22,7 +22,7 @@ async function connect(consulta) {
     );
 
     //console.log(result.rows);
-    console.log(result)
+    //console.log(result)
     return { "status": 200, "data": result.rows };
   } catch (error) {
     return { "status": 400, "message": error.message }

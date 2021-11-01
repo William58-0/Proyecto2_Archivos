@@ -63,7 +63,7 @@ const AplicanteMessenger = () => {
   const imageClick = async () => {
     if (receptName != undefined) {
       if (nuevomsj != "") {
-        sendMessage(perfil, nuevomsj, receptName);
+        const respp = await sendMessage(perfil, nuevomsj, receptName);
         window.location.reload();
       } else {
         alert("Escriba un mensaje")

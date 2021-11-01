@@ -27,6 +27,11 @@ password: 	1234
 
 -- PARA CONECTAR DESDE NODE JS HAY QUE DESCARGAR(.ZIP) Y CONFIGURAR BASIC INSTANT CLIENT PARA BASES REMOTAS
 
+-- archivo .env con los datos de la base de datos:
+DB_USER=TEST
+DB_PASSWORD=1234
+DB_CONNECTION_STRING=localhost:1521/ORCL18
+
 								
 								
 	
