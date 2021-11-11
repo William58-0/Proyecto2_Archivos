@@ -39,7 +39,7 @@ router.get("/getPuestos", async function (req, res, next) {
 });
 
 router.post("/Login", async function (req, res, next) {
-  console.log("llego a esto")
+
   const { nombre, contrasenia } = req.body
   let responseLogin = await service.connect(
     `SELECT * FROM COORDINADOR_REVISOR WHERE Nombre = '${nombre}' AND Contrasenia='${contrasenia}'`
